@@ -943,7 +943,8 @@ const TUTORIAL = 6;
 // 마지막으로 맞춘 뒤 이만큼 못 맞추면 힌트: 처음 두 판은 조작법 익히라고 5초, 그 뒤로 18초
 const hintSec = lv => lv <= 2 ? 5 : 18;
 const maxPartsAt = lv => lv <= 2 ? 2 : lv <= 4 ? 3 : 99;
-const fitsLevel = (o, lv, pool) => isSpec(o.want) || orderParts(o, pool).length <= maxPartsAt(lv);
+// 군용 4족로봇(국내생산 조건)은 국내생산 타일이 나오는 10단계 전에는 주문이 오지 않음
+const fitsLevel = (o, lv, pool) => (!o.korea || pool.includes('korea')) && (isSpec(o.want) || orderParts(o, pool).length <= maxPartsAt(lv));
 // RU$H TIME: 연속 납품(다음 납품까지 12초 이내) 3번이면 10초 동안 점수 2배·기다림 바 절반 속도, 납품할 때마다 3초 연장
 const RUSH_GAP = 12, RUSH_NEED = 3, RUSH_SEC = 10, RUSH_ADD = 3;
 const SLOTS = 3, COLS = 5, ROWS = 5, STOCK_MAX = 3, GONE_SEC = 3.5, DONE_SEC = 1.1;
@@ -1787,7 +1788,7 @@ const CASE_WHY = {
 };
 function pickCase() {
   S.seenCases = S.seenCases || [];
-  const all = ORDERS.filter(o => CASE_WHY[o.id] && S.def.robots.includes(o.want));
+  const all = ORDERS.filter(o => CASE_WHY[o.id] && S.def.robots.includes(o.want) && fitsLevel(o, S.lv, S.def.pool));
   const fresh = all.filter(o => !S.seenCases.includes(o.id));
   const list = fresh.length ? fresh : all;
   return list.length ? list[Math.floor(Math.random() * list.length)] : null;
@@ -2457,7 +2458,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-075150';
+const BUILD_V = '1004-075531';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
