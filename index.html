@@ -768,7 +768,7 @@ const TILES = {
   wheel: { icon: '🛞', name: '바퀴',     color: 'var(--t-wheel)' },
   auto:  { icon: '🧠', name: '피지컬AI', color: 'var(--t-auto)' },  // 자율주행·판단을 맡는 AI
   floor: { icon: '🚧', name: '바닥 공사', color: 'var(--t-floor)' },
-  arm:   { icon: svgIcon('cobot'), img: svgImg('cobot'), name: '협동로봇(공기계)',  color: 'var(--t-arm)', lite: true },
+  arm:   { icon: svgIcon('cobot'), img: svgImg('cobot'), name: '코봇(공기계)',  color: 'var(--t-arm)', lite: true },
   iarm:  { icon: '🦾', name: '산업용 팔', color: 'var(--t-iarm)' },  // 바닥에 고정하는 노란 산업용 로봇 팔 (빈손)
   tool:  { icon: svgIcon('grip'), img: svgImg('grip'), name: '엔드포인트 SI', color: 'var(--t-tool)' },
   legs:  { icon: '🦿', name: '다리',     color: 'var(--t-legs)', lite: true },
@@ -2458,7 +2458,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-075531';
+const BUILD_V = '1004-075609';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
