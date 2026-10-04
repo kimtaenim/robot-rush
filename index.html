@@ -437,6 +437,9 @@ body.rush .board { box-shadow: 0 0 0 6px var(--gold), 0 0 0 7px #fff3, 0 0 28px 
 .leave .lsad { font-size: 50px; line-height: 1; letter-spacing: 2px; white-space: nowrap; }
 .leave .lword { font-family: var(--font-display); font-size: 30px; color: var(--accent); text-shadow: 0 2px 0 var(--ink), 0 0 12px rgba(0, 0, 0, .5); white-space: nowrap; }
 .leave.angry .lword { color: #FF8A80; }
+/* 계약 취소 사유: 포스트잇 노란 쪽지, 부족한 부품은 빨간 글씨 */
+.leave.angry .lfact { background: #FFF176; }
+.leave.angry .lfact b { color: #D32F2F; }
 .puff { position: fixed; z-index: 41; pointer-events: none; border-radius: 50%; transform: translate(-50%, -50%) scale(.3); background: radial-gradient(circle, rgba(225, 230, 234, .95) 0%, rgba(170, 178, 186, .7) 45%, rgba(150, 160, 170, 0) 70%); animation: puff .8s ease-out forwards; }
 @keyframes puff { to { transform: translate(-50%, -80%) scale(1.6); opacity: 0; } }
 
@@ -2518,7 +2521,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-133325';
+const BUILD_V = '1004-134005';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
