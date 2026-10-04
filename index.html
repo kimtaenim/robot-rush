@@ -1190,6 +1190,19 @@ const SFX = {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
   },
+  // 그랜다이저 맞춤: 주제가 "도솔도솔도 솔 미미미파솔 도 시시라 솔솔 솔 라시도" (마림바)
+  grendizer: () => {
+    if (!audio() || SFX._busy('grd', 5200)) return;
+    const B = 0.3;
+    const G4 = 392, C5 = 523, E5 = 659, F5 = 698, G5 = 784, A5 = 880, B5 = 988, C6 = 1047;
+    let at = 0;
+    for (const [f, len] of [[C5, .5], [G4, .5], [C5, .5], [G4, .5], [C5, 1], [G4, 1],
+      [E5, .5], [E5, .5], [E5, .5], [F5, .5], [G5, 1], [C6, 1],
+      [B5, .5], [B5, .5], [A5, 1], [G5, .5], [G5, .5], [G5, 1], [A5, .5], [B5, .5], [C6, 2]]) {
+      SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
+      at += len;
+    }
+  },
   _last: {},
   _busy: (k, ms) => { const now = performance.now(); if (now - (SFX._last[k] || 0) < ms) return true; SFX._last[k] = now; return false; },
   // 리셔플: 부르르 떨리는 소리 → 빨려 드는 휘익 → 흩어지는 짤랑 (Bosses의 리셔플 때 울리는 연쇄음 느낌)
@@ -2285,6 +2298,7 @@ async function resolve() {
     if (m.groups.some(g => g.type === 'eva')) SFX.evaTheme();
     if (m.groups.some(g => g.type === 'taekwonv')) SFX.taekwonv();
     if (m.groups.some(g => g.type === 'mazinger')) SFX.mazinger();
+    if (m.groups.some(g => g.type === 'grendizer')) SFX.grendizer();
     let sx = 0, sy = 0;
     for (const i of m.matched) { const [r, c] = S.board.rc(i); sx += cx(c); sy += cy(r); }
     if (chain >= 2) { fxText(sx / m.matched.size, sy / m.matched.size, `x${chain}`, 30 + chain * 8, '#FFD84A'); $('chain').textContent = `연쇄 ×${chain}`; }
@@ -2481,7 +2495,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-111448';
+const BUILD_V = '1004-111521';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
