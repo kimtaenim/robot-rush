@@ -850,7 +850,7 @@ const ORDERS = [
   { id: 'godzbase', want: 'mgodz', n: 1, mood: 'long', icon: '🦖', who: '고질라 대책본부', task: '"메카고질라, 기동!"', sec: '★ 특별 주문', fact: '고질라를 막으려면 고질라만 한 로봇이 필요해요. 1974년생이라 AI 대신 산업용 로봇 기술로!' },
   { id: 'photon',   want: 'mazinger', n: 1, mood: 'long', icon: '⚡', who: '광자력연구소', task: '"파일더 온!"', sec: '★ 특별 주문', fact: '"무쇠로 만든 사람, 인조인간 로보트 마징가 Z!" 1972년생이라 AI는 없어요.' },
   { id: 'ufo',      want: 'grendizer', n: 1, mood: 'long', icon: '🛸', who: '우주과학연구소', task: '"그랜다이저, 고!"', sec: '★ 특별 주문', fact: '"스페이스 썬더!" 1975년생이라 AI 대신 산업용 로봇 기술이에요.' },
-  { id: 'kimlab',   want: 'taekwonv', n: 1, mood: 'long', icon: '🥋', who: '김박사 연구소', task: '"로보트 태권V, 출동!"', sec: '★ 특별 주문', fact: '"달려라 달려 로보트야, 날아라 날아 태권V!" 택갈이 의혹이 있지만 국산 직생로봇이에요.' },
+  { id: 'kimlab',   want: 'taekwonv', n: 1, korea: true, mood: 'long', icon: '🥋', who: '김박사 연구소', task: '"로보트 태권V, 출동!"', sec: '★ 특별 주문', fact: '"달려라 달려 로보트야, 날아라 날아 태권V!" 택갈이 의혹이 있지만 국산 직생로봇이에요.' },
   { id: 'hyundai',  want: 'hum',   n: 1, union: true, mood: 'long', icon: '🚙', who: '현대차',      task: '조립 라인 투입',     sec: '⑤ 자동차 공장', fact: '아틀라스 2만5000대 이상을 공장에 투입할 계획이에요.' },
   { id: 'bmw',      want: 'hum',   n: 1, us: true, mood: 'long', icon: '🇺🇸', who: 'BMW',        task: '차체 라인 교대 근무', sec: '⑤ 자동차 공장', fact: 'Figure 02 2대가 11개월간 주 5일 10시간 교대로 일했어요.' },
   { id: 'cj',       want: 'hum',   n: 1, mood: 'long', icon: '🧴', who: 'CJ대한통운',  task: '양팔로 완충재 포장', sec: '⑫ 물류센터',    fact: '올리브영 물류센터 포장 라인에 휴머노이드 양팔 로봇 2대가 들어갔어요.' },
@@ -917,7 +917,8 @@ function levelDef(lv) {
   if (lv >= 21) S.lastOld = special;
   // 특별 로봇에 필요한 일반 부품(SI, 트랜스포머는 바퀴)은 보드에 꼭 포함
   const debut = Object.keys(ROBOT_FROM).find(r => ROBOT_FROM[r] === lv);
-  const must = [...new Set([...ROBOTS[special].parts.filter(p => !isSpec(p)), ...(fresh ? [fresh] : []), ...(debut ? ROBOTS[debut].parts : [])])].slice(0, n);
+  // 태권V는 국산이라 국내생산 타일도 꼭 포함
+  const must = [...new Set([...ROBOTS[special].parts.filter(p => !isSpec(p)), ...(special === 'taekwonv' ? ['korea'] : []), ...(fresh ? [fresh] : []), ...(debut ? ROBOTS[debut].parts : [])])].slice(0, n);
   const tryPick = (minRobots, minOrders, allUsed) => {
     for (let k = 0; k < 300; k++) {
       const tiles = [...must, ...shuffled(pool.filter(t => !must.includes(t))).slice(0, n - must.length)];
@@ -1563,7 +1564,8 @@ function orderNote(c) {
   let out = '';
   if (has('made')) out += `<div class="oc-note">🇺🇸 미국 FCC가 외국에서 생산된 첨단 로봇의 인증을 막아요. 미국 안에서 만든 로봇만!</div>`;
   if (has('union')) out += `<div class="oc-note">🤝 금속노조 현대차지부: "노사 합의 없이 단 1대의 로봇도 현장에 들어올 수 없다"</div>`;
-  if (has('korea')) out += `<div class="oc-note">🇰🇷 보스턴다이내믹스는 비무기화 서약 때문에 군 임무가 묶여요. 군용은 현대로템·레인보우로보틱스 같은 국산 플랫폼으로!</div>`;
+  if (has('korea') && c.order.want === 'taekwonv') out += `<div class="oc-note">🇰🇷 태권V는 순수 국산! 국내생산 없이는 출동 불가예요.</div>`;
+  else if (has('korea')) out += `<div class="oc-note">🇰🇷 보스턴다이내믹스는 비무기화 서약 때문에 군 임무가 묶여요. 군용은 현대로템·레인보우로보틱스 같은 국산 플랫폼으로!</div>`;
   return out;
 }
 
@@ -2510,7 +2512,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-144942';
+const BUILD_V = '1004-182606';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
