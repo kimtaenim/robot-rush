@@ -1185,8 +1185,8 @@ const SFX = {
   mazinger: () => {
     if (!audio() || SFX._busy('maz', 3800)) return;
     const B = 0.36;
-    const A4 = 440, C5 = 523, E5 = 659;
-    for (const [f, at, len] of [[A4, 0, .5], [C5, .5, .5], [E5, 1, 1], [A4, 2, .5], [A4, 2.5, .5], [C5, 3, .5], [E5, 3.5, 1.5], [E5, 5, .5], [E5, 5.5, .5], [E5, 6, 1], [A4, 7, 2]]) {
+    const A4 = 440, C5 = 523, E5 = 659, A5 = 880;
+    for (const [f, at, len] of [[A4, 0, .5], [C5, .5, .5], [E5, 1, 1], [A4, 2, .5], [A4, 2.5, .5], [C5, 3, .5], [E5, 3.5, 1.5], [E5, 5, .5], [E5, 5.5, .5], [E5, 6, 1], [A5, 7, 2]]) {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
   },
@@ -2495,7 +2495,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-111521';
+const BUILD_V = '1004-111731';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
