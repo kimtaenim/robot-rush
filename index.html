@@ -1170,7 +1170,7 @@ const SFX = {
     if (!audio() || SFX._busy('tkv', 3800)) return;
     const B = 0.36;
     const C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784;
-    for (const [f, at, len] of [[G5, 0, .5], [G5, .5, .5], [G5, 1, 1], [G5, 2, .5], [F5, 2.5, .5], [E5, 3, .5], [D5, 3.5, .5], [C5, 4, 1], [E5, 5, .5], [D5, 5.5, .5], [C5, 6, 2]]) {
+    for (const [f, at, len] of [[G5, 0, .5], [G5, .5, 1.5], [G5, 2, .5], [G5, 2.5, .5], [F5, 3, .5], [E5, 3.5, .5], [D5, 4, .5], [C5, 4.5, 1], [E5, 5.5, .5], [D5, 6, .5], [C5, 6.5, 2]]) {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
   },
@@ -2512,7 +2512,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-182606';
+const BUILD_V = '1004-182646';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
