@@ -1479,7 +1479,9 @@ const centerX = () => innerWidth / 2;
 // ───────── RU$H TIME: 빨리 연속 납품하면 점수 2배 ─────────
 const rushOn = () => S.clock < S.rushUntil;
 const rushMul = () => rushOn() ? 2 : 1;
+// RU$H TIME은 꺼둠 (연속 배지·돈벼락·점수 2배 없음)
 function rushDeliver() {
+  return;
   if (rushOn()) { S.rushUntil += RUSH_ADD; S.streak++; renderRush(); return; }
   S.streak = S.clock - S.lastDone <= RUSH_GAP ? S.streak + 1 : 1;
   S.lastDone = S.clock;
@@ -2495,7 +2497,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-113700';
+const BUILD_V = '1004-133043';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
