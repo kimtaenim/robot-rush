@@ -1402,7 +1402,9 @@ function clientTick(dt) {
     if (!c) return;
     if (c.state === 'wait') {
       if (c.intro || c.noTimer) return;  // 주문서를 읽는 동안·휴머노이드 손님은 기다림 바가 흐르지 않음
-      if ((c.t -= dt * (rushOn() ? 0.5 : 1)) > 0) return;  // RU$H TIME에는 기다림 바가 절반 속도
+      // 바가 빨갛게 된 뒤(35% 밑)로는 절반 속도로 줄어듦: 아슬아슬하게 납품할 시간을 더 줌
+      const slow = c.t / c.max < BANDS[1].at ? RED_SLOW : 1;
+      if ((c.t -= dt * slow * (rushOn() ? 0.5 : 1)) > 0) return;  // RU$H TIME에는 기다림 바가 절반 속도
       // 너무 늦음: 계약 취소. 우는 얼굴이 뜨고 피식 사라짐
       c.state = 'gone'; c.until = GONE_SEC;
       vibrate([40, 40, 40]);
@@ -1916,6 +1918,7 @@ function burstAt(x, y) {
 // ───────── 렌더링: 주문서 자리 ─────────
 // 기다림 바 색 구간: 세룰리안 → 노랑 → 다홍 → 버건디
 const BANDS = [{ at: 0.6 }, { at: 0.35 }, { at: 0.15 }, { at: 0 }];
+const RED_SLOW = 0.5;
 const bandOf = c => Math.max(0, BANDS.findIndex(b => c.t / c.max >= b.at));
 // 주문서 가운데 손님 얼굴: 기다림 바 구간마다 표정이 바뀜, 납품하면 활짝, 떠나면 눈물
 const FACES = ['😊', '😐', '😠', '😡'];
@@ -2521,7 +2524,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-210702';
+const BUILD_V = '1004-211404';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
