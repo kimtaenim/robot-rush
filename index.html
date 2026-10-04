@@ -1172,17 +1172,23 @@ const SFX = {
       nz(t, 0.025, 0.018, 'highpass', 7000); nz(t + B * 0.66, 0.025, 0.014, 'highpass', 7000);  // 스윙 하이햇
     }
   },
-  // 태권V 맞춤: 주제가 첫 소절 "달려라 달려 로보트야" = 도도레 미 라 솔솔파미 (행진곡풍 금관 + 스네어)
+  // 태권V 맞춤: 주제가 마지막 소절 "솔솔솔 솔파미레 도 미레도" (마림바)
   taekwonv: () => {
     if (!audio() || SFX._busy('tkv', 3800)) return;
-    const B = 0.42, t0 = ac.currentTime + 0.05;
-    const C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784, A5 = 880;
-    // [음, 시작 박, 길이 박]  달(.5) 려(.5) 라(1) 달(1) 려(1) | 로(.5) 보(.5) 트(.5) 야(1.5)
-    for (const [f, at, len] of [[C5, 0, .5], [C5, .5, .5], [D5, 1, 1], [E5, 2, 1], [A5, 3, 1], [G5, 4, .5], [G5, 4.5, .5], [F5, 5, .5], [E5, 5.5, 1.5]]) {
-      brass2(f, t0 + at * B, len * B * 0.9, 0.16); brass2(f / 2, t0 + at * B, len * B * 0.9, 0.07); SFX.marimba(f, 0.05 + at * B, 0.18, len * B * 0.8);
+    const B = 0.36;
+    const C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784;
+    for (const [f, at, len] of [[G5, 0, .5], [G5, .5, .5], [G5, 1, 1], [G5, 2, .5], [F5, 2.5, .5], [E5, 3, .5], [D5, 3.5, .5], [C5, 4, 1], [E5, 5, .5], [D5, 5.5, .5], [C5, 6, 2]]) {
+      SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
-    for (let k = 0; k < 7; k++) { snare(t0 + k * B, k % 2 ? 0.06 : 0.04); if (k % 2 === 0) timp(t0 + k * B, 0.12); }
-    crash(t0 + 5.5 * B, 0.07);
+  },
+  // 마징가 맞춤: 주제가 "라도미 라라도미 미미 미 라" (마림바)
+  mazinger: () => {
+    if (!audio() || SFX._busy('maz', 3800)) return;
+    const B = 0.36;
+    const A4 = 440, C5 = 523, E5 = 659;
+    for (const [f, at, len] of [[A4, 0, .5], [C5, .5, .5], [E5, 1, 1], [A4, 2, .5], [A4, 2.5, .5], [C5, 3, .5], [E5, 3.5, 1.5], [E5, 5, .5], [E5, 5.5, .5], [E5, 6, 1], [A4, 7, 2]]) {
+      SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
+    }
   },
   _last: {},
   _busy: (k, ms) => { const now = performance.now(); if (now - (SFX._last[k] || 0) < ms) return true; SFX._last[k] = now; return false; },
@@ -2278,6 +2284,7 @@ async function resolve() {
     if (m.groups.some(g => g.type === 'korea')) SFX.onghaeya();
     if (m.groups.some(g => g.type === 'eva')) SFX.evaTheme();
     if (m.groups.some(g => g.type === 'taekwonv')) SFX.taekwonv();
+    if (m.groups.some(g => g.type === 'mazinger')) SFX.mazinger();
     let sx = 0, sy = 0;
     for (const i of m.matched) { const [r, c] = S.board.rc(i); sx += cx(c); sy += cy(r); }
     if (chain >= 2) { fxText(sx / m.matched.size, sy / m.matched.size, `x${chain}`, 30 + chain * 8, '#FFD84A'); $('chain').textContent = `연쇄 ×${chain}`; }
@@ -2474,7 +2481,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-111045';
+const BUILD_V = '1004-111448';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
