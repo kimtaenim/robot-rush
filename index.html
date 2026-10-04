@@ -2413,7 +2413,9 @@ function biasedType() {
     const k = need[t] || 0;
     let x = COND_TILES.has(t) && !k ? 0.6 : 1;
     // 필요한 개수만큼 비례해서 (다리 둘이 드는 4족로봇이 몰려도 따라가게 상한을 넉넉히), 보드에 적으면 더
-    if (k) x *= 1 + 0.6 * Math.min(k, 8) * ((onBoard[t] || 0) < 5 ? 1.5 : 1);
+    // 뒤 단계에서 다리·SI·바퀴가 순간순간 막혀 주문을 날리지 않게: 필요한데 보드에 거의 없으면 훨씬 세게 밀어 줌
+    const ob = onBoard[t] || 0;
+    if (k) x *= 1 + 1.0 * Math.min(k, 8) * (ob < 3 ? 2.5 : ob < 5 ? 1.6 : 1);
     return x;
   });
   let r = Math.random() * w.reduce((a, b) => a + b, 0);
@@ -2519,7 +2521,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-203021';
+const BUILD_V = '1004-210702';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
