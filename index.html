@@ -905,12 +905,12 @@ function levelDef(lv) {
   // 특별 로봇 판: 5단계 건담, 8단계 에바, 11단계 터미네이터, 14단계 트랜스포머.
   // 17단계부터는 3단계마다(17, 20, 23…) 넷 중 하나를 무작위로. 나머지 판은 휴머노이드
   // 5 건담, 8 에바, 11 터미네이터, 14 트랜스포머 / 17·20은 그 넷 중 무작위
-  // 21단계부터(엔딩 뒤)는 판마다 추억의 로봇(메카고질라·마징가 Z·그랜다이저·태권V) 중 무작위, 25단계부터는 휴머노이드도 섞음 (바로 앞 판과는 다르게)
+  // 21단계부터(엔딩 뒤)는 판마다 추억의 로봇(메카고질라·마징가 Z·그랜다이저·태권V) 중 무작위, 25단계부터는 휴머노이드·최신 특별 로봇(터미네이터·건담·에바·트랜스포머)도 섞음 (바로 앞 판과는 다르게)
   const FIXED_SPECIAL = { 5: 'gundam', 8: 'eva', 11: 'term', 14: 'tf' };
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const OLD = ['mgodz', 'mazinger', 'grendizer', 'taekwonv'];
   const special = FIXED_SPECIAL[lv]
-    || (lv >= 21 ? pick((lv >= 25 ? ['hum', ...OLD] : OLD).filter(r => r !== S.lastOld)) : lv >= 17 && (lv - 17) % 3 === 0 ? pick(['term', 'gundam', 'eva', 'tf']) : 'hum');
+    || (lv >= 21 ? pick((lv >= 25 ? ['hum', 'term', 'gundam', 'eva', 'tf', ...OLD] : OLD).filter(r => r !== S.lastOld)) : lv >= 17 && (lv - 17) % 3 === 0 ? pick(['term', 'gundam', 'eva', 'tf']) : 'hum');
   if (lv >= 21) S.lastOld = special;
   // 특별 로봇에 필요한 일반 부품(SI, 트랜스포머는 바퀴)은 보드에 꼭 포함
   const debut = Object.keys(ROBOT_FROM).find(r => ROBOT_FROM[r] === lv);
@@ -2474,7 +2474,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-110209';
+const BUILD_V = '1004-110246';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
