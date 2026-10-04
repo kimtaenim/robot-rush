@@ -1870,6 +1870,7 @@ function caseShow(o, title = '납품 사례') {
     }, 900);
   });
 }
+const TILE_SONG = { taekwonv: 'taekwonv', mazinger: 'mazinger', grendizer: 'grendizer', eva: 'evaTheme', korea: 'onghaeya', made: 'anthem' };
 function newTilesShow(list) {
   return new Promise(done => {
     const el = document.createElement('div');
@@ -1878,6 +1879,9 @@ function newTilesShow(list) {
     el.innerHTML = `<div class="nt-panel"><div class="nt-head">${S.lv === 1 ? '이번 판 타일' : '새 타일 등장!'}</div>${rows}<div class="nt-tap">알겠어요 ▶</div></div>`;
     document.body.appendChild(el);
     SFX.ticket();
+    // 주제가가 있는 타일이 소개되면 그 주제가도 같이 (여럿이면 첫 번째 것만)
+    const song = list.map(t => TILE_SONG[t]).find(Boolean);
+    if (song) setTimeout(() => { SFX._last = {}; SFX[song](); }, 350);
     setTimeout(() => {
       el.classList.add('ready');
       const go = () => { el.removeEventListener('pointerdown', go); el.classList.add('out'); setTimeout(() => { el.remove(); done(); }, 250); };
@@ -2515,7 +2519,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-202158';
+const BUILD_V = '1004-203021';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
