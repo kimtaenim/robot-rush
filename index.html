@@ -1155,10 +1155,10 @@ const SFX = {
   evaTheme: () => {
     if (!audio() || SFX._busy('eva', 4200)) return;
     const B = 0.3;
-    const E5 = 659, G5 = 784, A5 = 880, C6 = 1047, D6 = 1175;
+    const C5 = 523, D5 = 587, E5 = 659, G5 = 784, A5 = 880;
     let at = 0;
     for (const [f, len] of [[E5, 1], [G5, 1], [A5, 2],
-      [D6, .5], [C6, .5], [G5, .5], [G5, .5], [E5, .5], [G5, 1.5],
+      [D5, .5], [C5, .5], [G5, .5], [G5, .5], [E5, .5], [G5, 1.5],
       [G5, 1], [A5, 3]]) {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
       at += len;
@@ -2510,7 +2510,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-144632';
+const BUILD_V = '1004-144942';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
