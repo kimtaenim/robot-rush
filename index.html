@@ -1187,12 +1187,12 @@ const SFX = {
   },
   // 그랜다이저 맞춤: 주제가 "도솔도솔도 솔 미미미파솔 도 시시라 솔솔 솔 라시도" (마림바)
   grendizer: () => {
-    if (!audio() || SFX._busy('grd', 5200)) return;
+    if (!audio() || SFX._busy('grd', 5600)) return;
     const B = 0.3;
     const E5 = 659, F5 = 698, G5 = 784, A5 = 880, B5 = 988, C6 = 1047;
     let at = 0;
-    for (const [f, len] of [[C6, .5], [G5, .5], [C6, .5], [G5, .5], [C6, 1], [G5, 1],
-      [E5, .5], [E5, .5], [E5, .5], [F5, .5], [G5, 1], [C6, 1],
+    for (const [f, len] of [[C6, .5], [G5, .5], [C6, .5], [G5, .5], [C6, 1.5], [G5, .5],
+      [E5, .5], [E5, .5], [E5, .5], [F5, .5], [G5, 2], [C6, 1],
       [B5, .5], [B5, .5], [A5, 1], [G5, .5], [G5, .5], [G5, 1], [A5, .5], [B5, .5], [C6, 2]]) {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
       at += len;
@@ -2515,7 +2515,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-183216';
+const BUILD_V = '1004-183447';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
