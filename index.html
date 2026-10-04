@@ -1133,15 +1133,15 @@ const SFX = {
       t += d;
     }
   },
-  // 태극기 맞춤: 옹헤야 "미~ 라라 미~ 라라 도 라 도 라 미~ 라 라" (미만 두 배)
+  // 태극기 맞춤: 옹헤야 "라- 레레 라- 레레 파 레 파 레 라- 레 레---"
   // 자진모리 장단(12/8, 한 박 = 8분음표 셋)처럼 긴-짧은 쿵짝: 도(긴)라(짧) | 도(긴)라(짧) | 미(긴)라(짧) | 라(한 박 통째)
   // 장구: 덩(1박) 쿵(2박) 덕(3박 뒤) 쿵(4박)
   onghaeya: () => {
-    if (!audio() || SFX._busy('onghaeya', 5200)) return;
+    if (!audio() || SFX._busy('onghaeya', 6000)) return;
     const t = ac.currentTime + 0.03, e = 0.15;  // 8분음표 길이 (한 박 = 0.45초)
-    const D = 523, L = 440, M = 330;  // 미는 낮은 미
-    for (const [f, at, len] of [[M, 0, 4], [L, 4, 2], [L, 6, 2], [M, 8, 4], [L, 12, 2], [L, 14, 2],
-      [D, 16, 2], [L, 18, 2], [D, 20, 2], [L, 22, 2], [M, 24, 4], [L, 28, 2], [L, 30, 2]]) {
+    const La = 440, Re = 587, Fa = 698;  // 4도 올려 전조: 라- 레레 라- 레레 파 레 파 레 라- 레 레---
+    for (const [f, at, len] of [[La, 0, 4], [Re, 4, 2], [Re, 6, 2], [La, 8, 4], [Re, 12, 2], [Re, 14, 2],
+      [Fa, 16, 2], [Re, 18, 2], [Fa, 20, 2], [Re, 22, 2], [La, 24, 4], [Re, 28, 2], [Re, 30, 8]]) {
       const d = len * e;
       // 해금처럼 살짝 흔들리는 톱니 + 마림바
       const o = osc('sawtooth', f, t + at * e, d * 0.95, 0.05);
@@ -1151,7 +1151,7 @@ const SFX = {
     const dung = at => { osc('sine', 110, t + at * e, 0.22, 0.2, 55); nz(t + at * e, 0.06, 0.06, 'bandpass', 1200, 2); };
     const kung = at => osc('sine', 80, t + at * e, 0.2, 0.18, 50);
     const deok = at => nz(t + at * e, 0.05, 0.08, 'bandpass', 2600, 3);
-    dung(0); deok(4); kung(8); deok(12); dung(16); deok(20); kung(24); deok(28);
+    dung(0); deok(4); kung(8); deok(12); dung(16); deok(20); kung(24); deok(28); dung(30);
   },
   // 에바 맞춤: 에반게리온 주제가 "미~ 솔~ 라라레도 솔솔미솔솔~ 라~~~" (마림바)
   evaTheme: () => {
@@ -1174,14 +1174,14 @@ const SFX = {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
   },
-  // 마징가 맞춤: 주제가 "라~도미~~~~ 라라도미~~~~ 미미~ 미미~~~ 라~~~" (마림바, u = 기본 한 음 길이)
+  // 마징가 맞춤: 주제가 "레~ 파 라~~~ 레레파 라~~~ 라 라~ 라 라~~~ 높은레~~~" (마림바, u = 기본 한 음 길이)
   mazinger: () => {
-    if (!audio() || SFX._busy('maz', 4000)) return;
-    const u = 0.12;
-    const A4 = 440, C5 = 523, E5 = 659, A5 = 880;
+    if (!audio() || SFX._busy('maz', 5500)) return;
+    const u = 0.19;
+    const D5 = 587, F5 = 698, A5 = 880, D6 = 1175;
     let at = 0;
-    for (const [f, len] of [[A4, 2], [C5, 1], [E5, 5], [A4, 1], [A4, 1], [C5, 1], [E5, 5],
-      [E5, 1], [E5, 2], [E5, 1], [E5, 4], [A5, 4]]) {
+    for (const [f, len] of [[D5, 2], [F5, 1], [A5, 4], [D5, 1], [D5, 1], [F5, 1], [A5, 4],
+      [A5, 1], [A5, 2], [A5, 1], [A5, 4], [D6, 4]]) {
       SFX.marimba(f, 0.05 + at * u, 0.26, Math.min(1.4, len * u * 0.95 + 0.1));
       at += len;
     }
@@ -2520,7 +2520,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-073026';
+const BUILD_V = '1005-075002';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
