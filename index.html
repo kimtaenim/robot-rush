@@ -1245,17 +1245,13 @@ const SFX = {
     [2093, 2637, 3136, 4186].forEach((f, i) => osc('sine', f, t + 0.07 + i * 0.015, 0.6, 0.06));
     for (let k = 0; k < 14; k++) { const d = 0.25 + k * 0.045 + Math.random() * 0.03; osc('sine', 2600 + Math.random() * 2400, t + d, 0.12, 0.035); nz(t + d, 0.03, 0.03, 'highpass', 6000); }
   },
-  // 납품 성공: 빵빠레 "따따따 따~ 딴!" (스네어 받침 → 큰 화음 + 심벌 + 팀파니 + 글로켄 반짝)
+  // 납품 성공: 가게 문 차임처럼 "띵~동~" (빵빠레보다 조용하게, 돈 버는 일터 느낌)
   done: () => {
     if (!audio()) return;
     const t = ac.currentTime + 0.02;
-    [[392, 0], [392, 0.09], [392, 0.18]].forEach(([f, d]) => { brass2(f, t + d, 0.07, 0.07); snare(t + d, 0.05); });
-    brass2(523, t + 0.27, 0.24, 0.08); snare(t + 0.27, 0.07);
-    const g = t + 0.54;
-    [523, 659, 784, 1047].forEach(f => brass2(f, g, 0.75, 0.05));
-    brass2(262, g, 0.75, 0.05);
-    crash(g, 0.1); timp(g);
-    [1568, 2093, 2637, 3136].forEach((f, k) => glock(f, g + 0.08 + k * 0.06, 0.035));
+    const bell = (f, at) => { osc('sine', f, t + at, 1.1, 0.16); osc('sine', f * 2, t + at, 0.5, 0.04); osc('sine', f * 3, t + at, 0.2, 0.015); };
+    bell(659, 0);     // 띵 (미)
+    bell(523, 0.32);  // 동 (도)
   },
   // 손님이 관두고 떠남: "아 오"
   leave: () => { if (!audio()) return; voiceAwOh(ac.currentTime); },
@@ -2525,7 +2521,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-233857';
+const BUILD_V = '1004-233933';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
