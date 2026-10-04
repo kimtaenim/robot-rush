@@ -1249,9 +1249,15 @@ const SFX = {
   done: () => {
     if (!audio()) return;
     const t = ac.currentTime + 0.02;
-    const bell = (f, at) => { osc('sine', f, t + at, 1.1, 0.16); osc('sine', f * 2, t + at, 0.5, 0.04); osc('sine', f * 3, t + at, 0.2, 0.015); };
-    bell(659, 0);     // 띵 (미)
-    bell(523, 0.32);  // 동 (도)
+    // 실로폰·벨처럼: 한 옥타브 높게, 맑은 배음 + 살짝 어긋난 두 음이 맥놀이로 반짝, 2초 가까이 길게 울림
+    const bell = (f, at) => {
+      const s = t + at;
+      osc('sine', f, s, 1.9, 0.11); osc('sine', f + 2.5, s, 1.9, 0.06);
+      osc('sine', f * 2, s, 1.1, 0.045); osc('sine', f * 3, s, 0.6, 0.025);
+      osc('sine', f * 4.2, s, 0.35, 0.02); osc('sine', f * 5.4, s, 0.12, 0.02);  // 땅 치는 반짝임
+    };
+    bell(1319, 0);     // 띵 (높은 미)
+    bell(1047, 0.34);  // 동 (높은 도)
   },
   // 손님이 관두고 떠남: "아 오"
   leave: () => { if (!audio()) return; voiceAwOh(ac.currentTime); },
@@ -2514,7 +2520,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-234028';
+const BUILD_V = '1005-073026';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
