@@ -1005,6 +1005,13 @@ function unlockAudio() {
     if (!silentEl) { silentEl = new Audio(SILENT_WAV); silentEl.setAttribute('playsinline', ''); }
     silentEl.play().catch(() => {});
   } catch (e) {}
+  // 다른 앱에 다녀오면 아이폰은 오디오가 'interrupted'로 멈추고 resume()해도 소리가 안 나는 경우가 있음
+  // (Bosses of Our World와 같은 해결법): 돌아온 뒤 첫 탭에서 오디오를 버리고 새로 만듦
+  if (ac && (audioStale || ac.state === 'closed' || (ac.state !== 'running' && ac.state !== 'suspended'))) {
+    audioStale = false;
+    const old = ac; ac = null; master = null; noiseBuf = null; hum = null;
+    try { if (old.state !== 'closed') old.close().catch(() => {}); } catch (e) {}
+  }
   try {
     if (!ac) { touched = true; audio(); }
     if (ac) {
@@ -1015,8 +1022,12 @@ function unlockAudio() {
     }
   } catch (e) {}
 }
-['pointerdown', 'touchend', 'mousedown', 'click', 'keydown'].forEach(ev => addEventListener(ev, unlockAudio, { capture: true, passive: true }));
-document.addEventListener('visibilitychange', () => { if (!document.hidden && ac && ac.state !== 'running' && touched) ac.resume(); });
+// 브라우저가 '사용자 동작'으로 인정하는 이벤트에서 깨움 (pointerdown은 안드로이드 크롬이 인정하지 않음)
+['touchend', 'pointerup', 'mouseup', 'click', 'keydown'].forEach(ev => addEventListener(ev, unlockAudio, { capture: true, passive: true }));
+let audioStale = false;
+const audioAway = () => { audioStale = true; try { if (ac && ac.state === 'running') ac.suspend().catch(() => {}); } catch (e) {} };
+document.addEventListener('visibilitychange', () => { if (document.hidden) audioAway(); else if (ac && touched) ac.resume().catch(() => {}); });
+addEventListener('pagehide', audioAway);
 // 짧게 울리고 사라지는 음 (f1이 있으면 주파수가 미끄러짐)
 function osc(type, f, t, dur, peak, f1, dest) {
   const o = ac.createOscillator(), g = ac.createGain();
@@ -2461,7 +2472,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-101156';
+const BUILD_V = '1004-104743';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
