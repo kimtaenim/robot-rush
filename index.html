@@ -1180,7 +1180,7 @@ const SFX = {
     const A4 = 440, C5 = 523, E5 = 659, A5 = 880;
     let at = 0;
     for (const [f, len] of [[A4, 2], [C5, 1], [E5, 5], [A4, 1], [A4, 1], [C5, 1], [E5, 5],
-      [E5, 1], [E5, 1.5], [E5, .5], [E5, 4], [A5, 4]]) {
+      [E5, 1], [E5, 2], [E5, 1], [E5, 4], [A5, 4]]) {
       SFX.marimba(f, 0.05 + at * u, 0.26, Math.min(1.4, len * u * 0.95 + 0.1));
       at += len;
     }
@@ -2515,7 +2515,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-202009';
+const BUILD_V = '1004-202158';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
