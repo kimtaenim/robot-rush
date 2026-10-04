@@ -1174,13 +1174,15 @@ const SFX = {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
     }
   },
-  // 마징가 맞춤: 주제가 "라도미 라라도미 미미 미 라" (마림바)
+  // 마징가 맞춤: 주제가 "라도미~ 라도미~ 미미~ 미~~ 라~" (마림바)
   mazinger: () => {
-    if (!audio() || SFX._busy('maz', 3800)) return;
-    const B = 0.36;
+    if (!audio() || SFX._busy('maz', 4200)) return;
+    const B = 0.32;
     const A4 = 440, C5 = 523, E5 = 659, A5 = 880;
-    for (const [f, at, len] of [[A4, 0, .5], [C5, .5, .5], [E5, 1, 1], [A4, 2, .5], [A4, 2.5, .5], [C5, 3, .5], [E5, 3.5, 1.5], [E5, 5, .5], [E5, 5.5, .5], [E5, 6, 1], [A5, 7, 2]]) {
+    let at = 0;
+    for (const [f, len] of [[A4, .5], [C5, .5], [E5, 1.5], [A4, .5], [C5, .5], [E5, 1.5], [E5, .5], [E5, 1], [E5, 2], [A5, 2]]) {
       SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
+      at += len;
     }
   },
   // 그랜다이저 맞춤: 주제가 "도솔도솔도 솔 미미미파솔 도 시시라 솔솔 솔 라시도" (마림바)
@@ -2513,7 +2515,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-182950';
+const BUILD_V = '1004-183216';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
