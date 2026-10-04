@@ -1564,7 +1564,7 @@ function orderNote(c) {
   let out = '';
   if (has('made')) out += `<div class="oc-note">🇺🇸 미국 FCC가 외국에서 생산된 첨단 로봇의 인증을 막아요. 미국 안에서 만든 로봇만!</div>`;
   if (has('union')) out += `<div class="oc-note">🤝 금속노조 현대차지부: "노사 합의 없이 단 1대의 로봇도 현장에 들어올 수 없다"</div>`;
-  if (has('korea') && c.order.want === 'taekwonv') out += `<div class="oc-note">🇰🇷 태권V는 순수 국산! 국내생산 없이는 출동 불가예요.</div>`;
+  if (has('korea') && c.order.want === 'taekwonv') out += `<div class="oc-note">🇰🇷 택갈이라는 말도 있지만, 일단은 국내 직생입니다.</div>`;
   else if (has('korea')) out += `<div class="oc-note">🇰🇷 보스턴다이내믹스는 비무기화 서약 때문에 군 임무가 묶여요. 군용은 현대로템·레인보우로보틱스 같은 국산 플랫폼으로!</div>`;
   return out;
 }
@@ -2512,7 +2512,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-182646';
+const BUILD_V = '1004-182732';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
