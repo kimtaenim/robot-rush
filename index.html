@@ -1145,9 +1145,7 @@ const SFX = {
       // 해금처럼 살짝 흔들리는 톱니 + 마림바
       const o = osc('sawtooth', f, t + at * e, d * 0.95, 0.05);
       const v = ac.createOscillator(), vg = ac.createGain(); v.frequency.value = 7; vg.gain.value = f * 0.02; v.connect(vg).connect(o.frequency); v.start(t + at * e); v.stop(t + at * e + d);
-      // 낮은 미는 마림바의 높은 배음(약 4배)이 폰 스피커에서 높은 미처럼 들려서, 배음 없이 기음만 또렷하게
-      if (f === M) { osc('triangle', f, t + at * e, d * 0.9, 0.22); osc('sine', f * 2, t + at * e, d * 0.6, 0.06); }
-      else SFX.marimba(f, 0.03 + at * e, 0.2, d * 0.8);
+      SFX.marimba(f, 0.03 + at * e, 0.2, d * 0.8);
     }
     const dung = at => { osc('sine', 110, t + at * e, 0.22, 0.2, 55); nz(t + at * e, 0.06, 0.06, 'bandpass', 1200, 2); };
     const kung = at => osc('sine', 80, t + at * e, 0.2, 0.18, 50);
@@ -2526,7 +2524,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-232112';
+const BUILD_V = '1004-232225';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
