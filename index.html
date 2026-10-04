@@ -1175,8 +1175,8 @@ const SFX = {
   },
   // 마징가 맞춤: 주제가 "라도미~ 라라도미~ 미미~ 미미~~ 라" (마림바)
   mazinger: () => {
-    if (!audio() || SFX._busy('maz', 3600)) return;
-    const B = 0.27;
+    if (!audio() || SFX._busy('maz', 4000)) return;
+    const B = 0.32;
     const A4 = 440, C5 = 523, E5 = 659, A5 = 880;
     let at = 0;
     for (const [f, len] of [[A4, .25], [C5, .25], [E5, 1.25], [A4, .25], [A4, .25], [C5, .25], [E5, 1.25],
@@ -2515,7 +2515,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-200348';
+const BUILD_V = '1004-201511';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
