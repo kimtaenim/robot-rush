@@ -1140,7 +1140,7 @@ const SFX = {
     if (!audio() || SFX._busy('onghaeya', 2400)) return;
     const t = ac.currentTime + 0.03, e = 0.15;  // 8분음표 길이 (한 박 = 0.45초)
     const D = 523, L = 440, M = 330;  // 미는 낮은 미
-    for (const [f, at, len] of [[D, 0, 2], [L, 2, 1], [D, 3, 2], [L, 5, 1], [M, 6, 2], [L, 8, 1], [L, 9, 3]]) {
+    for (const [f, at, len] of [[D, 0, 2], [L, 2, 1], [D, 3, 2], [L, 5, 1], [M, 6, 3], [L, 9, 1], [L, 10, 3]]) {
       const d = len * e;
       // 해금처럼 살짝 흔들리는 톱니 + 마림바
       const o = osc('sawtooth', f, t + at * e, d * 0.95, 0.05);
@@ -2515,7 +2515,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-201549';
+const BUILD_V = '1004-201611';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
