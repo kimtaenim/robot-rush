@@ -1151,28 +1151,17 @@ const SFX = {
     const deok = at => nz(t + at * e, 0.05, 0.08, 'bandpass', 2600, 3);
     dung(0); kung(3); deok(6); deok(8); kung(9);
   },
-  // 에바 타일 맞춤: 에반게리온 주제가 첫 소절 "라도레도레레레솔파미레미" (미국 국가처럼 마림바)
-  // 에바 맞춤: 엔딩곡 "Fly Me to the Moon" 첫 소절 "도시라솔파~ 솔라도 시라솔파미~" (4/4, 가사 박자대로 "moon"·"stars"는 4박 뒷박에서 당겨 길게, 약 5초)
-  // 마림바 가락 + 베이스(Am7 → Dm7 → G7 → Cmaj7 근음·5음) + 브러시 느낌 하이햇
+  // 에바 맞춤: 에반게리온 주제가 "미 솔 라 레도솔솔미솔 솔 라" (마림바)
   evaTheme: () => {
-    if (!audio() || SFX._busy('eva', 5200)) return;
-    const B = 0.355, t0 = ac.currentTime + 0.05;
-    const C5 = 523, B4 = 494, A4 = 440, G4 = 392, F4 = 349, E4 = 330;
-    // [음, 시작 박, 길이 박]  Fly(1.5) me(.5) to(1) the(.5) moon(2.5) | and(.5) let(.5) me(1) | play(1.5) a(.5) mong(1) the(.5) stars(2.5)
-    for (const [f, at, len, v] of [[C5, 0, 1.5, .28], [B4, 1.5, .5, .24], [A4, 2, 1, .26], [G4, 3, .5, .24], [F4, 3.5, 2.5, .28],
-      [G4, 6, .5, .24], [A4, 6.5, .5, .24], [C5, 7, 1, .28], [B4, 8, 1.5, .27], [A4, 9.5, .5, .24], [G4, 10, 1, .26], [F4, 11, .5, .24], [E4, 11.5, 2.5, .3]]) {
-      SFX.marimba(f, 0.05 + at * B, v, Math.min(1.6, len * B * 0.95 + 0.1));
-      osc('triangle', f, t0 + at * B, len * B * 0.9, v * 0.14);
-    }
-    // 베이스: 마디마다 근음(1박)·5음(3박)
-    [[110, 165], [147, 220], [98, 147], [131, 196]].forEach(([r, f5], m) => {
-      osc('triangle', r, t0 + m * 4 * B, B * 1.8, 0.16); osc('triangle', f5, t0 + (m * 4 + 2) * B, B * 1.6, 0.12);
-    });
-    for (let k = 0; k < 14; k++) {
-      const t = t0 + k * B;
-      if (k % 4 === 0) osc('sine', 110, t, 0.14, 0.12, 50);                 // 킥: 마디 첫 박
-      if (k % 2 === 1) nz(t, 0.1, 0.035, 'bandpass', 3000, 0.6);           // 브러시: 2·4박
-      nz(t, 0.025, 0.018, 'highpass', 7000); nz(t + B * 0.66, 0.025, 0.014, 'highpass', 7000);  // 스윙 하이햇
+    if (!audio() || SFX._busy('eva', 4200)) return;
+    const B = 0.3;
+    const E5 = 659, G5 = 784, A5 = 880, C6 = 1047, D6 = 1175;
+    let at = 0;
+    for (const [f, len] of [[E5, 1], [G5, 1], [A5, 2],
+      [D6, .5], [C6, .5], [G5, .5], [G5, .5], [E5, .5], [G5, 1.5],
+      [G5, 1], [A5, 3]]) {
+      SFX.marimba(f, 0.05 + at * B, 0.26, Math.min(1.4, len * B * 0.95 + 0.1));
+      at += len;
     }
   },
   // 태권V 맞춤: 주제가 마지막 소절 "솔솔솔 솔파미레 도 미레도" (마림바)
@@ -2521,7 +2510,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-134005';
+const BUILD_V = '1004-144632';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
