@@ -1562,8 +1562,11 @@ async function orderIntro(c, i) {
   set(mx, my, 0.3, 0);
   scrim.style.top = '0px'; scrim.style.height = rr.bottom + 'px';
   SFX.ticket();
-  // 수락: 주문서나 그 둘레(주문서 칸 영역)를 누르면 됨. 보드는 가리지 않음
-  const accepted = new Promise(res => { const go = () => { scrim.removeEventListener('pointerdown', go); el.removeEventListener('pointerdown', go); res(); }; scrim.addEventListener('pointerdown', go); el.addEventListener('pointerdown', go); });
+  // 수락: 화면 어디를 눌러도 됨 (보드를 누르면 수락과 함께 그 타일도 그대로 골라짐)
+  const accepted = new Promise(res => {
+    const go = () => { document.removeEventListener('pointerdown', go, true); res(); };
+    document.addEventListener('pointerdown', go, true);
+  });
   const P = pace(S.lv);
   await tween(240 * P, q => { set(mx, my, 0.3 + 0.7 * q, q); scrim.style.opacity = q; }, EASE.outQuad);
   // 다 뜨면 까딱까딱 두 번
@@ -2458,7 +2461,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-075609';
+const BUILD_V = '1004-101156';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
