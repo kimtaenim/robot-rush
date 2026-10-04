@@ -905,12 +905,12 @@ function levelDef(lv) {
   // 특별 로봇 판: 5단계 건담, 8단계 에바, 11단계 터미네이터, 14단계 트랜스포머.
   // 17단계부터는 3단계마다(17, 20, 23…) 넷 중 하나를 무작위로. 나머지 판은 휴머노이드
   // 5 건담, 8 에바, 11 터미네이터, 14 트랜스포머 / 17·20은 그 넷 중 무작위
-  // 21단계부터(엔딩 뒤)는 판마다 휴머노이드와 추억의 로봇(메카고질라·마징가 Z·그랜다이저·태권V) 중 무작위 (바로 앞 판과는 다르게)
+  // 21단계부터(엔딩 뒤)는 판마다 추억의 로봇(메카고질라·마징가 Z·그랜다이저·태권V) 중 무작위, 25단계부터는 휴머노이드도 섞음 (바로 앞 판과는 다르게)
   const FIXED_SPECIAL = { 5: 'gundam', 8: 'eva', 11: 'term', 14: 'tf' };
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const OLD = ['mgodz', 'mazinger', 'grendizer', 'taekwonv'];
   const special = FIXED_SPECIAL[lv]
-    || (lv >= 21 ? pick(['hum', ...OLD].filter(r => r !== S.lastOld)) : lv >= 17 && (lv - 17) % 3 === 0 ? pick(['term', 'gundam', 'eva', 'tf']) : 'hum');
+    || (lv >= 21 ? pick((lv >= 25 ? ['hum', ...OLD] : OLD).filter(r => r !== S.lastOld)) : lv >= 17 && (lv - 17) % 3 === 0 ? pick(['term', 'gundam', 'eva', 'tf']) : 'hum');
   if (lv >= 21) S.lastOld = special;
   // 특별 로봇에 필요한 일반 부품(SI, 트랜스포머는 바퀴)은 보드에 꼭 포함
   const debut = Object.keys(ROBOT_FROM).find(r => ROBOT_FROM[r] === lv);
@@ -933,7 +933,8 @@ function levelDef(lv) {
 }
 // 단계 목표 = 만족시켜 보낸 손님 수 (떠난 손님은 세지 않음)
 // 1단계 5명, 단계마다 +1명, 최대 14명
-const levelTarget = lv => Math.min(14, 4 + lv);
+// 엔딩 뒤 21~24단계는 8명으로 짧게, 25단계부터 9·10·…명으로 다시 늘어 30단계부터 14명
+const levelTarget = lv => lv >= 25 ? Math.min(14, lv - 16) : lv >= 21 ? 8 : Math.min(14, 4 + lv);
 // 템포: 처음엔 느리게(읽으며 배우게), 판마다 조금씩 빨라져서 12단계부터 지금 속도
 // 주문서가 뜨고 사라지는 연출·손님이 오는 간격에 곱함 (1단계 2.3배 → 6단계 1.7배 → 12단계 1배)
 const pace = lv => lv >= 12 ? 1 : 1 + 1.5 * (12 - lv) / 11;  // 1단계 2.5배 느리게 → 12단계 1배  // 1단계는 4배 넘게 느리게(읽을 시간), 2단계 2.8배 → 12단계 1배
@@ -2473,7 +2474,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1004-110113';
+const BUILD_V = '1004-110209';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
