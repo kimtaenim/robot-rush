@@ -1137,8 +1137,8 @@ const SFX = {
   // 자진모리 장단(12/8, 한 박 = 8분음표 셋)처럼 긴-짧은 쿵짝: 도(긴)라(짧) | 도(긴)라(짧) | 미(긴)라(짧) | 라(한 박 통째)
   // 장구: 덩(1박) 쿵(2박) 덕(3박 뒤) 쿵(4박)
   onghaeya: () => {
-    if (!audio() || SFX._busy('onghaeya', 6000)) return;
-    const t = ac.currentTime + 0.03, e = 0.15;  // 8분음표 길이 (한 박 = 0.45초)
+    if (!audio() || SFX._busy('onghaeya', 5000)) return;
+    const t = ac.currentTime + 0.03, e = 0.12;  // 8분음표 길이 (조금 빠르게)
     const La = 440, Re = 587, Fa = 698;  // 4도 올려 전조: 라- 레레 라- 레레 파 레 파 레 라- 레 레---
     for (const [f, at, len] of [[La, 0, 4], [Re, 4, 2], [Re, 6, 2], [La, 8, 4], [Re, 12, 2], [Re, 14, 2],
       [Fa, 16, 2], [Re, 18, 2], [Fa, 20, 2], [Re, 22, 2], [La, 24, 4], [Re, 28, 2], [Re, 30, 8]]) {
@@ -2520,7 +2520,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-075002';
+const BUILD_V = '1005-075227';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
