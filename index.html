@@ -569,6 +569,15 @@ class Board {
     return false;
   }
 
+  // (r,c)에 type을 놓으면 어느 방향으로든 3연속이나 2×2가 되는지 (빈칸은 안 셈)
+  makesMatchAt(r, c, type) {
+    const at = (rr, cc) => rr >= 0 && rr < this.rows && cc >= 0 && cc < this.cols ? this.typeAt(rr, cc) : null;
+    const run = (dr, dc) => { let n = 0; for (let k = 1; at(r + dr * k, c + dc * k) === type; k++) n++; return n; };
+    if (run(0, -1) + run(0, 1) >= 2 || run(-1, 0) + run(1, 0) >= 2) return true;
+    for (const [dr, dc] of [[-1, -1], [-1, 1], [1, -1], [1, 1]]) if (at(r + dr, c) === type && at(r, c + dc) === type && at(r + dr, c + dc) === type) return true;
+    return false;
+  }
+
   swap(a, b) {
     const ia = this.idx(a.r, a.c), ib = this.idx(b.r, b.c);
     const t = this.cells[ia];
@@ -714,7 +723,10 @@ class Board {
       }
       const empty = write + 1;
       for (let r = write; r >= 0; r--) {
-        const t = makeTile(this.randomType(), false, r - empty, c);
+        // 새로 떨어지는 타일이 그 자리에서 바로 3개 줄·2×2를 만들지 않게 (공짜로 터지는 일 방지)
+        let type, guard = 0;
+        do { type = this.randomType(); guard++; } while (guard < 30 && this.makesMatchAt(r, c, type));
+        const t = makeTile(type, false, r - empty, c);
         this.cells[this.idx(r, c)] = t;
         falls.push({ tile: t, c, fromY: r - empty, toR: r });
       }
@@ -2520,7 +2532,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-075610';
+const BUILD_V = '1005-104202';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
