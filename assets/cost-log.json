@@ -1,6 +1,6 @@
 {
- "total_usd": 26.9149,
- "images": 244,
+ "total_usd": 27.3495,
+ "images": 248,
  "runs": [
   {
    "started": "2026-10-03T01:27:26.439Z",
@@ -463,6 +463,13 @@
    "quality": "medium",
    "images": 2,
    "usd": 0.2175
+  },
+  {
+   "started": "2026-10-05T05:53:18.936Z",
+   "only": "robot-delivery,tile-cert",
+   "quality": "medium",
+   "images": 4,
+   "usd": 0.4346
   }
  ]
 }
