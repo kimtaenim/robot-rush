@@ -569,9 +569,9 @@ class Board {
     return false;
   }
 
-  // (r,c)에 type을 놓으면 어느 방향으로든 3연속이나 2×2가 되는지 (빈칸은 안 셈)
-  makesMatchAt(r, c, type) {
-    const at = (rr, cc) => rr >= 0 && rr < this.rows && cc >= 0 && cc < this.cols ? this.typeAt(rr, cc) : null;
+  // (r,c)에 type을 놓으면 어느 방향으로든 3연속이나 2×2가 되는지 (빈칸은 안 셈, only가 있으면 그 칸들만 셈)
+  makesMatchAt(r, c, type, only) {
+    const at = (rr, cc) => rr >= 0 && rr < this.rows && cc >= 0 && cc < this.cols && (!only || only.has(this.idx(rr, cc))) ? this.typeAt(rr, cc) : null;
     const run = (dr, dc) => { let n = 0; for (let k = 1; at(r + dr * k, c + dc * k) === type; k++) n++; return n; };
     if (run(0, -1) + run(0, 1) >= 2 || run(-1, 0) + run(1, 0) >= 2) return true;
     for (const [dr, dc] of [[-1, -1], [-1, 1], [1, -1], [1, 1]]) if (at(r + dr, c) === type && at(r, c + dc) === type && at(r + dr, c + dc) === type) return true;
@@ -708,7 +708,7 @@ class Board {
   // 빈칸을 아래로 채우고 위에서 새 타일 생성.
   // 반환: [{ tile, c, fromY, toR }] — fromY가 음수면 보드 위에서 새로 생긴 타일
   collapse() {
-    const falls = [];
+    const falls = [], fresh = new Set();
     for (let c = 0; c < this.cols; c++) {
       let write = this.rows - 1;
       for (let r = this.rows - 1; r >= 0; r--) {
@@ -723,10 +723,11 @@ class Board {
       }
       const empty = write + 1;
       for (let r = write; r >= 0; r--) {
-        // 새로 떨어지는 타일이 그 자리에서 바로 3개 줄·2×2를 만들지 않게 (공짜로 터지는 일 방지)
+        // 새로 떨어지는 타일끼리 셋이 다 같은 모양으로 줄을 만들지 않게 (둘까지는 괜찮음, 원래 있던 타일과 맞는 건 그대로)
         let type, guard = 0;
-        do { type = this.randomType(); guard++; } while (guard < 30 && this.makesMatchAt(r, c, type));
+        do { type = this.randomType(); guard++; } while (guard < 30 && this.makesMatchAt(r, c, type, fresh));
         const t = makeTile(type, false, r - empty, c);
+        fresh.add(this.idx(r, c));
         this.cells[this.idx(r, c)] = t;
         falls.push({ tile: t, c, fromY: r - empty, toR: r });
       }
@@ -2532,7 +2533,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-104202';
+const BUILD_V = '1005-104326';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
