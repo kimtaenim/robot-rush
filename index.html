@@ -1178,6 +1178,33 @@ const SFX = {
       at += len;
     }
   },
+  // 메카고질라 맞춤: Bosses of Our World의 카이주 울음 그대로 "캬아아아아~" 쇳소리 섞인 포효 3초
+  mgodz: () => {
+    if (!audio() || SFX._busy('mgodz', 3400)) return;
+    const t = ac.currentTime + 0.02, D = 3.0;
+    for (const [f0, f1, type, vol] of [[440, 300, 'sawtooth', 0.2], [455, 290, 'sawtooth', 0.16], [880, 560, 'square', 0.05], [110, 75, 'square', 0.1]]) {
+      const o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain(), vib = ac.createOscillator(), vg = ac.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(f0 * 0.65, t);
+      o.frequency.linearRampToValueAtTime(f0, t + 0.35);       // 캬
+      o.frequency.linearRampToValueAtTime(f0 * 0.95, t + 1.8);  // 아아아
+      o.frequency.linearRampToValueAtTime(f1, t + D);           // 아~ 하고 내려앉음
+      vib.frequency.setValueAtTime(18, t); vib.frequency.linearRampToValueAtTime(30, t + D);
+      vg.gain.value = f0 * 0.045;
+      vib.connect(vg).connect(o.frequency);
+      f.type = 'bandpass'; f.frequency.value = 1500; f.Q.value = 0.8;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.25);
+      g.gain.setValueAtTime(vol, t + D * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + D);
+      o.connect(f).connect(g).connect(master);
+      for (const x of [o, vib]) { x.start(t); x.stop(t + D + 0.05); }
+    }
+    // 쇳소리 바람
+    const src = ac.createBufferSource(), nf = ac.createBiquadFilter(), ng = ac.createGain();
+    src.buffer = noiseBuf; nf.type = 'bandpass'; nf.Q.value = 1.5;
+    nf.frequency.setValueAtTime(2600, t); nf.frequency.exponentialRampToValueAtTime(1300, t + D);
+    ng.gain.setValueAtTime(0.22, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + D);
+    src.connect(nf).connect(ng).connect(master); src.start(t); src.stop(t + D + 0.03);
+  },
   // 태권V 맞춤: 주제가 마지막 소절 "솔솔솔 솔파미레 도 미레도" (마림바)
   taekwonv: () => {
     if (!audio() || SFX._busy('tkv', 3800)) return;
@@ -1881,7 +1908,7 @@ function caseShow(o, title = '납품 사례') {
     }, 900);
   });
 }
-const TILE_SONG = { taekwonv: 'taekwonv', mazinger: 'mazinger', grendizer: 'grendizer', eva: 'evaTheme', korea: 'onghaeya', made: 'anthem' };
+const TILE_SONG = { mgodz: 'mgodz', taekwonv: 'taekwonv', mazinger: 'mazinger', grendizer: 'grendizer', eva: 'evaTheme', korea: 'onghaeya', made: 'anthem' };
 function newTilesShow(list) {
   return new Promise(done => {
     const el = document.createElement('div');
@@ -2334,6 +2361,7 @@ async function resolve() {
     if (m.groups.some(g => g.type === 'eva')) SFX.evaTheme();
     if (m.groups.some(g => g.type === 'taekwonv')) SFX.taekwonv();
     if (m.groups.some(g => g.type === 'mazinger')) SFX.mazinger();
+    if (m.groups.some(g => g.type === 'mgodz')) SFX.mgodz();
     if (m.groups.some(g => g.type === 'grendizer')) SFX.grendizer();
     let sx = 0, sy = 0;
     for (const i of m.matched) { const [r, c] = S.board.rc(i); sx += cx(c); sy += cy(r); }
@@ -2533,7 +2561,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-104326';
+const BUILD_V = '1005-104839';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
