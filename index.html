@@ -41,7 +41,7 @@
   --warn: #C77F00;
   --bad: #C03A2A;
   --scrim: rgba(6, 22, 26, 0.6);
-  --t-wheel: #E34234; --t-auto: #1E88C8; --t-arm: #F28C28; --t-iarm: #474C55; --t-legs: #F2C230; --t-tool: #8E3A9E; --t-hum: #D9DDE1; --t-floor: #3A9D5D; --t-made: #27407A; --t-union: #800020; --t-term: #5A5F66; --t-gundam: #2F5FB3; --t-eva: #7CC63E; --t-tf: #B5262B; --t-mgodz: #78909C; --t-mazinger: #4FC3F7; --t-grendizer: #7E57C2; --t-taekwonv: #0D47A1; --t-korea: #9C7A3C;
+  --t-wheel: #E34234; --t-auto: #1E88C8; --t-arm: #F28C28; --t-iarm: #474C55; --t-legs: #F2C230; --t-tool: #8E3A9E; --t-hum: #D9DDE1; --t-floor: #3A9D5D; --t-made: #27407A; --t-union: #800020; --t-term: #5A5F66; --t-gundam: #2F5FB3; --t-eva: #7CC63E; --t-tf: #B5262B; --t-mgodz: #78909C; --t-mazinger: #4FC3F7; --t-grendizer: #7E57C2; --t-taekwonv: #0D47A1; --t-korea: #9C7A3C; --t-cert: #0F8B8D;
   --t-ink-dark: #2B2118; --t-ink-light: #FFFFFF;
   --p-1: #1E88C8; --p-2: #F2C230; --p-3: #E34234; --p-4: #800020;
   --font-title: 'Rye', 'Georgia', serif;
@@ -791,6 +791,7 @@ const TILES = {
   made:  { icon: '🇺🇸', name: '해외수출', color: 'var(--t-made)' },
   union: { icon: '🤝', name: '노사합의', color: 'var(--t-union)' },
   korea: { icon: '🇰🇷', name: '국내생산', color: 'var(--t-korea)' },
+  cert:  { icon: '🪪', name: '운행안전인증', color: 'var(--t-cert)' },
   hum:   { icon: '🤖', name: '휴머노이드', color: 'var(--t-hum)', special: true, lite: true },
   // 4단계부터 세 판에 한 판꼴로 휴머노이드 대신 나오는 특별 타일 (머리만)
   term:   { icon: '💀', name: '터미네이터', color: 'var(--t-term)', special: true },
@@ -809,6 +810,7 @@ const TILES = {
 // 팔 달린 4족 = 다리 둘+팔+SI / 켄타우로스 = 휴머노이드 상체+다리+AI+SI
 const ROBOTS = {
   amr:   { icon: '🚚', name: 'AMR',               parts: ['wheel', 'auto'] },
+  delivery: { icon: '🛵', name: '실외 배송로봇',   parts: ['wheel', 'auto'] },  // + 운행안전인증 칸 (⑬ 배달)
   agv:   { icon: '🛤️', name: 'AGV',               parts: ['wheel', 'floor'] },
   cobot: { icon: '🦾', name: '협동로봇',           parts: ['arm', 'tool'] },
   indus: { icon: '🏗️', name: '산업용 로봇',        parts: ['iarm', 'floor', 'tool'] },  // 산업용 팔 + 바닥 공사(고정·안전 울타리) + SI
@@ -837,6 +839,10 @@ const ORDERS = [
   { id: 'ford',     want: 'amr',   n: 1, us: true, mood: 'hot',  icon: '🔌', who: '포드',        task: '공장 자재 운반',     sec: '② AMR',         fact: '티로보틱스가 미국 포드 ESS 공장에 AMR을 공급했어요.' },
   { id: 'usbat',    want: 'amr',   n: 1, us: true, mood: 'mid',  icon: '🔋', who: '국내 배터리사', task: '미국 공장 부품 운반',     sec: '⑧ 배터리 공장', fact: '미국에 공장을 둔 국내 배터리사는 부품 운반 AMR을 들일 때 FCC 장비 인증 규정을 살펴야 해요.' },
   { id: 'ecopro',   want: 'amr',   n: 1, mood: 'mid',  icon: '🧪', who: '에코프로',    task: '설비 순찰 점검',     sec: '⑧ 배터리 공장', fact: '이차전지 소재 공장에서 AMR로 설비를 점검하고 고장을 미리 잡아요.' },
+  { id: 'neubie',   want: 'delivery', n: 1, cert: true, mood: 'mid',  icon: '🍔', who: '뉴빌리티',    task: '송도 음식 배달',     sec: '⑬ 배달',        fact: "뉴빌리티 '뉴비'는 첫 운행안전인증을 받고 송도에서 요기요 음식 배달을 해요." },
+  { id: 'gaemi',    want: 'delivery', n: 1, cert: true, mood: 'calm', icon: '🐜', who: '로보티즈',    task: '공원 쓰레기 수거',   sec: '⑬ 배달',        fact: "로보티즈 '개미'는 2019년부터 마곡에서 실증했지만, 자동차로 분류돼 보도는 2023년 11월에야 달릴 수 있었어요." },
+  { id: 'golly',    want: 'delivery', n: 1, cert: true, mood: 'mid',  icon: '🏞️', who: 'HL만도',      task: '원주천 순찰',        sec: '⑬ 배달',        fact: "HL만도 '골리'는 원주천을 순찰해요. 법이 바뀌고 1년 동안 인증을 받은 업체는 6곳뿐이에요." },
+  { id: 'baemin',   want: 'delivery', n: 1, cert: true, mood: 'hot',  icon: '🛵', who: '우아한형제들', task: '보도 배달',          sec: '⑬ 배달',        fact: '부품을 바꾸면 인증을 다시 받아야 하고, 신호등 없는 횡단보도는 원격 승인을 받고 건너요.' },
   { id: 'mipo',     want: 'cobot', n: 2, mood: 'mid',  icon: '🚢', who: '',            task: '선체 용접',          sec: '④ 조선',        label: '용접 협동로봇', fact: '한 조선소는 협동로봇 27대를 추가해 누적 55대가 됐어요. 숙련 용접공을 구하지 못해 "일을 못 받는다"는 현장이에요.' },
   { id: 'ship2',    want: 'cobot', n: 1, mood: 'hot',  icon: '🚢', who: '',            task: '고열·분진 속 용접',   sec: '④ 조선',        label: '용접 협동로봇', fact: '조선소는 고열·먼지·용접 스패터 속에서 용접선을 따라 움직여야 해요. 작업자가 말로 지시하면 로봇이 토치 각도와 속도를 정하는 AI 과제도 진행 중이에요.' },
   { id: 'busanEdu', want: 'cobot', n: 1, mood: 'calm', icon: '🍱', who: '부산교육청',  task: '급식 조리',          sec: '⑱ 학교 급식',   label: '조리 협동로봇',   fact: '5개교에 조리로봇을 설치해요. 실증에서 근력 작업 72%가 줄었어요.' },
@@ -872,6 +878,7 @@ const ORDERS = [
 // 업종: 주문서·손님 자리에 회사 이름보다 크게 보여 줌
 const IND = {
   port: '항만', kai: '항공기 제조', stl: '물류센터', transys: '자동차 부품 공장', ford: '배터리(ESS) 공장', usbat: '배터리 공장', rby1: '제조 공장', ecopro: '배터리 소재 공장',
+  neubie: '실외 배송', gaemi: '실외 배송', golly: '실외 순찰', baemin: '실외 배송',
   mipo: '조선소', ship2: '조선소', busanEdu: '학교 급식실', seoulEdu: '학교 급식실', gyeonggiEdu: '학교 급식실', kyochon: '치킨집', bhc: '치킨집', gwangjin: '제조 공장', polytech: '직업 교육', lg: '배터리 공장',
   skynet: '미래에서 온 주문', autobot: '사이버트론', efsf: '우주세기 0079', nerv: '제3신동경시', godzbase: '도쿄만', photon: '광자력연구소', ufo: '우주과학연구소', kimlab: '김박사 연구소', posco: '제철소', posco2: '제철소', posco3: '제철소', fire2: '소방', police: '경찰', army: '방위산업', fire: '소방', hyundai: '자동차 공장', bmw: '자동차 공장', cj: '물류센터', catl: '배터리 공장',
 };
@@ -891,11 +898,12 @@ SECTORS.sort((a, b) => a.key.codePointAt(0) - b.key.codePointAt(0));
 // 타일 수(휴머노이드 제외): 1~4단계 4종, 5~9단계 5종, 10단계부터 6종
 // 5×5 보드 시뮬레이션: 4종 막힘 0.1%, 5종 1.7%, 6종 6.3% (막히면 섞음)
 // 5×6이면 4개짜리 매치가 잦아져 휴머노이드가 너무 쉽게 나와서 5×5 유지
-// 조건 타일: 6단계부터 노사합의(현대차), 9단계부터 해외수출 성조기(미국 손님), 10단계부터 국내생산 태극기(방위산업)
+// 조건 타일: 6단계 운행안전인증(실외 배송로봇), 7단계 노사합의(현대차), 10단계 해외수출 성조기(미국 손님), 11단계 국내생산 태극기(방위산업)
 const BASE_TILES = ['wheel', 'auto', 'arm', 'tool', 'floor', 'legs'];
-const TILE_FROM = { union: 6, iarm: 7, made: 9, korea: 10 };
+// 6단계 운행안전인증(실외 배송로봇)이 들어오면서 뒤 타일은 한 단계씩 밀림
+const TILE_FROM = { cert: 6, union: 7, iarm: 8, made: 10, korea: 11 };
 // 새 로봇이 처음 나오는 단계: 그 전에는 안 나오고, 그 판에는 꼭 나옴 (판 시작에 '새 로봇 등장!' 사례 페이지)
-const ROBOT_FROM = { indus: 7 };
+const ROBOT_FROM = { delivery: 6, indus: 8 };
 const robotOpen = (r, lv) => !ROBOT_FROM[r] || lv >= ROBOT_FROM[r];  // 노사합의는 타일이 5종인 6단계부터
 const tileCount = lv => lv >= 10 ? 6 : lv >= 5 ? 5 : 4;
 const poolAt = lv => [...BASE_TILES, ...Object.keys(TILE_FROM).filter(t => lv >= TILE_FROM[t])];
@@ -905,6 +913,7 @@ function orderParts(o, pool) {
   for (let k = 0; k < o.n; k++) out.push(...ROBOTS[o.want].parts);
   if (o.us && pool.includes('made')) out.push('made');
   if (o.korea && pool.includes('korea')) out.push('korea');
+  if (o.cert && pool.includes('cert')) out.push('cert');
   if (o.union && pool.includes('union')) out.push('union');
   return out;
 }
@@ -962,8 +971,8 @@ const TUTORIAL = 6;
 // 마지막으로 맞춘 뒤 이만큼 못 맞추면 힌트: 처음 두 판은 조작법 익히라고 5초, 그 뒤로 18초
 const hintSec = lv => lv <= 2 ? 5 : 18;
 const maxPartsAt = lv => lv <= 2 ? 2 : lv <= 4 ? 3 : 99;
-// 군용 4족로봇(국내생산 조건)은 국내생산 타일이 나오는 10단계 전에는 주문이 오지 않음
-const fitsLevel = (o, lv, pool) => (!o.korea || pool.includes('korea')) && (isSpec(o.want) || orderParts(o, pool).length <= maxPartsAt(lv));
+// 군용 4족로봇(국내생산 조건)은 국내생산 타일이 나오는 11단계 전에는 주문이 오지 않음
+const fitsLevel = (o, lv, pool) => (!o.korea || pool.includes('korea')) && (!o.cert || pool.includes('cert')) && (isSpec(o.want) || orderParts(o, pool).length <= maxPartsAt(lv));
 // RU$H TIME: 연속 납품(다음 납품까지 12초 이내) 3번이면 10초 동안 점수 2배·기다림 바 절반 속도, 납품할 때마다 3초 연장
 const RUSH_GAP = 12, RUSH_NEED = 3, RUSH_SEC = 10, RUSH_ADD = 3;
 const SLOTS = 3, COLS = 5, ROWS = 5, STOCK_MAX = 3, GONE_SEC = 3.5, DONE_SEC = 1.1;
@@ -1408,7 +1417,7 @@ function pickOrder(i) {
     const fresh = hums.filter(o => !open.has(o.id));
     let list = fresh.length ? fresh : hums;
     // 보드에 조건 타일(노사합의·해외수출)이 있으면 그걸 쓰는 손님(현대차·BMW)이 자주 옴
-    const cond = list.filter(o => orderParts(o, S.def.pool).some(p => p === 'union' || p === 'made' || p === 'korea'));
+    const cond = list.filter(o => orderParts(o, S.def.pool).some(p => p === 'union' || p === 'made' || p === 'korea' || p === 'cert'));
     if (cond.length && Math.random() < 0.7) list = cond;
     return list[Math.floor(Math.random() * list.length)];
   }
@@ -1605,6 +1614,7 @@ function orderNote(c) {
   if (has('made')) out += `<div class="oc-note">🇺🇸 미국 FCC가 외국에서 생산된 첨단 로봇의 인증을 막아요. 미국 안에서 만든 로봇만!</div>`;
   if (has('union')) out += `<div class="oc-note">🤝 금속노조 현대차지부: "노사 합의 없이 단 1대의 로봇도 현장에 들어올 수 없다"</div>`;
   if (c.order.want === 'mazinger') out += `<div class="oc-note">🇯🇵 일본은 여전히 산업용 로봇 강국이에요.</div>`;
+  if (has('cert')) out += `<div class="oc-note">🪪 2023년 11월 지능형로봇법이 바뀐 뒤 1년간 인증받은 업체는 6곳뿐. 부품을 바꾸면 다시 받아야 해요.</div>`;
   if (has('korea') && c.order.want === 'taekwonv') out += `<div class="oc-note">🇰🇷 택갈이 의혹도 있지만, 일단은 국내 직생입니다.</div>`;
   else if (has('korea')) out += `<div class="oc-note">🇰🇷 보스턴다이내믹스는 비무기화 서약 때문에 군 임무가 묶여요. 군용은 현대로템·레인보우로보틱스 같은 국산 플랫폼으로!</div>`;
   return out;
@@ -1666,6 +1676,7 @@ const MISS_WHY = {
   made: '미국은 외국에서 만든 첨단 로봇 인증을 막아서, 이 조건을 못 맞추면 팔 수 없어요.',
   union: '노사 합의가 없으면 현대차 공장엔 로봇 1대도 못 들어가요.',
   korea: '군 로봇은 국내에서 만들어야 해서, 국내생산이 아니면 납품할 수 없어요.',
+  cert: '운행안전인증이 없으면 배송로봇은 보도를 달릴 수 없어요.',
 };
 function missHTML(c) {
   const miss = [...new Set(c.needs.filter(nd => !nd.got).map(nd => nd.p))];
@@ -1836,6 +1847,7 @@ const TILE_HELP = {
   made: '미국 FCC가 외국에서 만든 첨단 로봇 인증을 막아요. 미국 주문(트럼프 손님)에 이 칸이 붙어요.',
   union: '"노사 합의 없이 로봇 1대도 안 된다." 현대차 주문에 이 칸이 붙어요.',
   korea: '군 로봇은 국내에서 만들어야 해요. 방위산업 주문에 이 칸이 붙어요.',
+  cert: '실외 배송로봇이 보도를 달리려면 운행안전인증을 받아야 해요. 인증 항목이 16개나 돼요. 배송로봇 주문에 이 칸이 붙어요.',
   hum: '처음엔 보드에 없어요. 4개·2×2를 맞추면 1개, 5개를 맞추면 2개가 위에서 내려와요.',
 };
 const SPECIAL_HELP = '이번 판 특별 손님! 휴머노이드 대신 이 타일이 내려와요. 4개·2×2를 맞추면 1개, 5개면 2개.';
@@ -1849,6 +1861,8 @@ function freshTiles() {
 }
 // 새 타일이 없는 판: 대신 실제 납품 사례 한 페이지 (완성 로봇 그림 + 어디에 + 왜 이 로봇인지)
 const CASE_WHY = {
+  neubie: '사람이 걷는 보도를 달려서 집 앞까지 가요. 바퀴와 스스로 길을 찾는 AI는 AMR과 같지만, 보도에 나가려면 운행안전인증이 따로 있어야 해요.',
+  gaemi: '기술은 2019년에 준비됐는데 법이 로봇을 자동차로 봐서 보도를 못 달렸어요. 로봇보다 규제가 먼저 풀려야 하는 현장이에요.',
   port: '부두는 길과 동선이 정해져 있고 같은 경로를 계속 오가요. 바닥에 깐 길을 따라가는 AGV가 정확하고 튼튼해요. 대신 처음에 길을 까는 바닥 공사가 필요해요.',
   kai: '공정 사이를 정해진 길로 오가는 자재 이송이에요. 길을 한 번 깔아 두면 AGV가 실수 없이 반복해요.',
   stl: '물류센터는 선반 배치가 자주 바뀌어요. AMR은 바닥 공사 없이 스스로 지도를 그리고 길을 찾아서, 배치가 바뀌어도 그대로 써요.',
@@ -2169,7 +2183,7 @@ const FACE_KEY = { '😊': 'smile', '😐': 'neutral', '😠': 'frown', '😡': 
 const CHAR_COOK = new Set(['학교 급식실', '치킨집']);
 const CHAR_SUIT = new Set(['물류센터', '경찰', '방위산업', '소방', '직업 교육', '미래에서 온 주문', '우주세기 0079', '제3신동경시']);
 const charOf = o => !o ? 'suit' : CHAR_COOK.has(o.ind) ? 'cook' : CHAR_SUIT.has(o.ind) ? 'suit' : 'worker';
-// 손님마다 한 번 정함: 해외수출 칸이 붙은 주문(9단계부터 미국 주문)만 트럼프, 양복 손님은 남녀 부장님이 무작위
+// 손님마다 한 번 정함: 해외수출 칸이 붙은 주문(10단계부터 미국 주문)만 트럼프, 양복 손님은 남녀 부장님이 무작위
 function pickChar(order, needs) {
   if (needs.includes('made')) return 'trump';
   const ch = charOf(order);
@@ -2181,13 +2195,13 @@ const faceHTML = (e, who = 'suit') => FACE_ART[who][e] || FACE_ART.suit[e] || e;
 // 같은 그림이 여러 개 있어도 박자가 겹치지 않게 시작점을 흩뜨림
 // 그림을 다시 그려도 폰에 남은 옛 그림이 보이지 않게 주소에 버전을 붙임
 // 파일마다 내용이 바뀔 때만 새로 받도록 파일 해시를 붙임 (빌드할 때 채움)
-const ART_HASH = {"tile-gundam-a.png": "41a00219", "ind-school-a.png": "1b0fc977", "robot-cobot-cook-b.png": "3f739fa6", "tile-tool-a.png": "f174149f", "tile-made-a.png": "d557ba97", "ind-training-b.png": "0efc1d0b", "robot-qarm-a.png": "901f7afc", "tile-legs-b.png": "c0299b41", "tile-union-b.png": "b3a03a42", "tile-mgodz-b.png": "64821f9c", "robot-indus-b.png": "4a7cabef", "face-cook-frown.png": "e01a4907", "face-cook-neutral.png": "71441525", "ind-battery-b.png": "6e2bd18d", "ind-fire-a.png": "a71484d3", "face-trump-neutral.png": "5aecac90", "tile-legs-a.png": "2faadad6", "face-worker-angry.png": "eb6b88ed", "ind-steel-a.png": "0f070238", "face-suitf-delight.png": "d729900f", "tile-iarm-a.png": "fc127d92", "ind-steel-b.png": "e122612f", "ind-defense-b.png": "5aa959f1", "face-cook-angry.png": "50c65318", "ind-port-b.png": "6f5dc395", "tile-tf-a.png": "d2bc0939", "ind-factory-a.png": "909659fd", "tile-grendizer-b.png": "c84e6170", "tile-term-b.png": "fa8e5b3f", "face-neutral.png": "a9a959b5", "tile-wheel-a.png": "9e98ebac", "face-cook-smile.png": "be9219e0", "robot-indus-a.png": "ba4c70bc", "tile-korea-b.png": "ebe1008b", "face-trump-tear.png": "21d22245", "tile-auto-b.png": "bb58686e", "ind-material-b.png": "a8f27197", "tile-korea-a.png": "d1987f19", "tile-union-a.png": "d48507d4", "ind-auto-a.png": "9a8abf4f", "tile-taekwonv-b.png": "0c7df26c", "face-frown.png": "26865767", "robot-centaur-a.png": "a9e1e03b", "tile-auto-a.png": "e7100d25", "robot-cobot-cook-a.png": "2acb022c", "face-worker-tear.png": "940dcfc3", "ind-autoparts-b.png": "a5dbd76a", "face-suitf-angry.png": "5b24ceb5", "tile-iarm-b.png": "f0647318", "face-suitf-tear.png": "d0923069", "robot-centaur-b.png": "848f1932", "robot-mm-a.png": "e5da97cf", "ind-defense-a.png": "23a0651c", "robot-quad-a.png": "1e1384cf", "ind-autoparts-a.png": "26dcf7ce", "tile-eva-b.png": "b64d5546", "face-cook-tear.png": "d529800c", "tile-gundam-b.png": "69722c17", "face-trump-delight.png": "e41c1f7d", "face-angry.png": "8542c3c5", "tile-floor-b.png": "7bfb4d09", "face-suitf-smile.png": "2bfa949d", "ind-material-a.png": "2c67685e", "tile-mazinger-a.png": "f8d55f95", "tile-term-a.png": "f86a988f", "tile-eva-a.png": "48055f29", "tile-hum-a.png": "cdc85433", "ind-port-a.png": "0e5340b9", "ind-police-a.png": "717025fa", "wheel-tilt-ref.png": "4a1e31a2", "robot-cobot-a.png": "bb066d5e", "tile-mazinger-b.png": "fe005cf8", "face-trump-angry.png": "6fc0cf6d", "tile-wheel-b.png": "df5d2104", "indus-ref.png": "2bfe4680", "face-worker-neutral.png": "f4f1ff96", "robot-amr-a.png": "21455470", "face-delight.png": "4b63238d", "face-trump-frown.png": "4102f723", "robot-mm-b.png": "41cc89c7", "ind-fire-b.png": "c530534e", "ind-police-b.png": "750b1169", "ind-ess-b.png": "c7fac005", "ind-training-a.png": "a9fe00e5", "tile-mgodz-a.png": "36243d52", "tile-tf-b.png": "23f3efda", "ind-aircraft-a.png": "53a6b218", "ind-school-b.png": "a14af652", "tile-arm-b.png": "6cb9dab3", "tile-taekwonv-a.png": "0c7df26c", "face-worker-delight.png": "56fdb189", "face-worker-smile.png": "7eaefd7c", "robot-quad-b.png": "9b27fe7b", "ind-chicken-a.png": "bd4bc4e3", "face-cook-delight.png": "5ceb20b0", "ind-battery-a.png": "2ead7359", "robot-agv-b.png": "397f8942", "face-tear.png": "7cacead6", "face-suitf-neutral.png": "b29259fe", "ind-auto-b.png": "f90715bb", "ind-shipyard-a.png": "7c43481e", "tile-grendizer-a.png": "d248d9c5", "tile-tool-b.png": "c8c8a23a", "ind-factory-b.png": "b9dfaab4", "ind-chicken-b.png": "b4930a6b", "ind-shipyard-b.png": "098fdbae", "robot-qarm-b.png": "abd9a737", "tile-arm-a.png": "cd420a51", "tile-made-b.png": "7077aabd", "tile-floor-a.png": "14074a30", "robot-cobot-weld-a.png": "da53987b", "robot-agv-a.png": "ee67b65c", "ind-logistics-b.png": "9c5aeeca", "face-smile.png": "786eeb95", "face-worker-frown.png": "0f8d8086", "robot-cobot-weld-b.png": "a9e69108", "robot-amr-b.png": "09f47fab", "tile-hum-b.png": "01ca7c8b", "ind-ess-a.png": "83fff111", "face-suitf-frown.png": "1236f440", "ind-aircraft-b.png": "6afa5f2a", "face-trump-smile.png": "03674df8", "robot-cobot-b.png": "7ea58bc1", "ind-logistics-a.png": "b1b04f38"};
+const ART_HASH = {"tile-gundam-a.png": "41a00219", "ind-school-a.png": "1b0fc977", "robot-cobot-cook-b.png": "3f739fa6", "tile-tool-a.png": "f174149f", "tile-made-a.png": "d557ba97", "ind-training-b.png": "0efc1d0b", "robot-qarm-a.png": "901f7afc", "tile-legs-b.png": "c0299b41", "tile-union-b.png": "b3a03a42", "tile-mgodz-b.png": "64821f9c", "robot-indus-b.png": "4a7cabef", "face-cook-frown.png": "e01a4907", "face-cook-neutral.png": "71441525", "ind-battery-b.png": "6e2bd18d", "ind-fire-a.png": "a71484d3", "face-trump-neutral.png": "5aecac90", "tile-legs-a.png": "2faadad6", "face-worker-angry.png": "eb6b88ed", "ind-steel-a.png": "0f070238", "face-suitf-delight.png": "d729900f", "tile-iarm-a.png": "fc127d92", "ind-steel-b.png": "e122612f", "ind-defense-b.png": "5aa959f1", "face-cook-angry.png": "50c65318", "robot-delivery-b.png": "3d3e9af1", "ind-port-b.png": "6f5dc395", "tile-tf-a.png": "d2bc0939", "ind-factory-a.png": "909659fd", "tile-grendizer-b.png": "c84e6170", "tile-term-b.png": "fa8e5b3f", "face-neutral.png": "a9a959b5", "tile-wheel-a.png": "9e98ebac", "face-cook-smile.png": "be9219e0", "tile-cert-b.png": "a8547049", "robot-indus-a.png": "ba4c70bc", "tile-korea-b.png": "ebe1008b", "face-trump-tear.png": "21d22245", "tile-auto-b.png": "bb58686e", "ind-material-b.png": "a8f27197", "tile-korea-a.png": "d1987f19", "tile-union-a.png": "d48507d4", "ind-auto-a.png": "9a8abf4f", "tile-taekwonv-b.png": "0c7df26c", "face-frown.png": "26865767", "robot-centaur-a.png": "a9e1e03b", "tile-auto-a.png": "e7100d25", "robot-cobot-cook-a.png": "2acb022c", "face-worker-tear.png": "940dcfc3", "ind-autoparts-b.png": "a5dbd76a", "face-suitf-angry.png": "5b24ceb5", "tile-iarm-b.png": "f0647318", "face-suitf-tear.png": "d0923069", "robot-centaur-b.png": "848f1932", "robot-mm-a.png": "e5da97cf", "ind-defense-a.png": "23a0651c", "robot-quad-a.png": "1e1384cf", "ind-autoparts-a.png": "26dcf7ce", "tile-eva-b.png": "b64d5546", "face-cook-tear.png": "d529800c", "tile-gundam-b.png": "69722c17", "face-trump-delight.png": "e41c1f7d", "face-angry.png": "8542c3c5", "tile-floor-b.png": "7bfb4d09", "face-suitf-smile.png": "2bfa949d", "ind-material-a.png": "2c67685e", "tile-mazinger-a.png": "f8d55f95", "tile-term-a.png": "f86a988f", "tile-eva-a.png": "48055f29", "tile-hum-a.png": "cdc85433", "ind-port-a.png": "0e5340b9", "ind-police-a.png": "717025fa", "robot-delivery-a.png": "86f3f745", "wheel-tilt-ref.png": "4a1e31a2", "robot-cobot-a.png": "bb066d5e", "tile-mazinger-b.png": "fe005cf8", "face-trump-angry.png": "6fc0cf6d", "tile-wheel-b.png": "df5d2104", "indus-ref.png": "2bfe4680", "face-worker-neutral.png": "f4f1ff96", "robot-amr-a.png": "21455470", "face-delight.png": "4b63238d", "face-trump-frown.png": "4102f723", "robot-mm-b.png": "41cc89c7", "ind-fire-b.png": "c530534e", "ind-police-b.png": "750b1169", "ind-ess-b.png": "c7fac005", "ind-training-a.png": "a9fe00e5", "tile-mgodz-a.png": "36243d52", "tile-tf-b.png": "23f3efda", "ind-aircraft-a.png": "53a6b218", "ind-school-b.png": "a14af652", "tile-arm-b.png": "6cb9dab3", "tile-taekwonv-a.png": "0c7df26c", "face-worker-delight.png": "56fdb189", "face-worker-smile.png": "7eaefd7c", "tile-cert-a.png": "fb8e769c", "robot-quad-b.png": "9b27fe7b", "ind-chicken-a.png": "bd4bc4e3", "face-cook-delight.png": "5ceb20b0", "ind-battery-a.png": "2ead7359", "robot-agv-b.png": "397f8942", "face-tear.png": "7cacead6", "face-suitf-neutral.png": "b29259fe", "ind-auto-b.png": "f90715bb", "ind-shipyard-a.png": "7c43481e", "tile-grendizer-a.png": "d248d9c5", "tile-tool-b.png": "c8c8a23a", "ind-factory-b.png": "b9dfaab4", "ind-chicken-b.png": "b4930a6b", "ind-shipyard-b.png": "098fdbae", "robot-qarm-b.png": "abd9a737", "tile-arm-a.png": "cd420a51", "tile-made-b.png": "7077aabd", "tile-floor-a.png": "14074a30", "robot-cobot-weld-a.png": "da53987b", "robot-agv-a.png": "ee67b65c", "ind-logistics-b.png": "9c5aeeca", "face-smile.png": "786eeb95", "face-worker-frown.png": "0f8d8086", "robot-cobot-weld-b.png": "a9e69108", "robot-amr-b.png": "09f47fab", "tile-hum-b.png": "01ca7c8b", "ind-ess-a.png": "83fff111", "face-suitf-frown.png": "1236f440", "ind-aircraft-b.png": "6afa5f2a", "face-trump-smile.png": "03674df8", "robot-cobot-b.png": "7ea58bc1", "ind-logistics-a.png": "b1b04f38"};
 // 게임에서는 가벼운 webp(assets/w/)를 씀. 파일 이름은 png와 같고 확장자만 다름
 const av = f => { const n = f.replace('assets/', ''); return `assets/w/${n.replace(/\.png$/, '.webp')}?v=${ART_HASH[n] || '0'}`; };
 // 업종 아이콘(ind-)은 a프레임만, 로봇·부품은 a·b를 번갈아 (팔이 까딱, 다리가 제자리걸음 등)
 // 두 번째 그림(b)은 잘 나온 것만 씀: 윙크·눈 반짝·바퀴 굴림 등. 몸이 바뀌어 버린 것(켄타우로스, 로봇 팔 타일)과 업종 아이콘은 한 장만
 // 두 번째 그림이 분명히 잘 나온 것만 번갈아 씀 (윙크·선글라스·눈 반짝·포효·구호·불빛)
-const AB_OK = new Set(['robot-amr', 'robot-agv', 'robot-cobot', 'robot-cobot-cook', 'robot-cobot-weld', 'robot-mm', 'robot-quad', 'robot-qarm', 'tile-hum', 'tile-term', 'tile-gundam', 'tile-eva', 'tile-union', 'tile-auto', 'tile-wheel', 'robot-indus']);
+const AB_OK = new Set(['robot-amr', 'robot-delivery', 'robot-agv', 'robot-cobot', 'robot-cobot-cook', 'robot-cobot-weld', 'robot-mm', 'robot-quad', 'robot-qarm', 'tile-hum', 'tile-term', 'tile-gundam', 'tile-eva', 'tile-union', 'tile-auto', 'tile-wheel', 'robot-indus']);
 const oneFrame = key => !AB_OK.has(key);
 const artHTML = key => `<span class="art bob${oneFrame(key) ? '' : ' swap'}" style="--d:-${(Math.random() * 1.1).toFixed(2)}s"><img src="${av(`assets/${key}-a.png`)}" alt="">${oneFrame(key) ? '' : `<img class="b" src="${av(`assets/${key}-b.png`)}" alt="">`}</span>`;
 // 다 받고 화면에 그릴 준비(decode)까지 끝나야 성공. 실패하면 한 번 더 시도
@@ -2462,7 +2476,7 @@ function biasedType() {
   for (let k = 0; k < w.length; k++) if ((r -= w[k]) < 0) return S.def.tiles[k];
   return S.def.tiles[0];
 }
-const COND_TILES = new Set(['union', 'made', 'korea']);
+const COND_TILES = new Set(['union', 'made', 'korea', 'cert']);
 
 // 오래 손을 안 대면 힌트 (Bosses of Our World처럼): 맞춰질 줄 전체를 금빛 테두리로, 옮길 타일에서 목적지로 화살표
 let hintCells = [];
@@ -2561,7 +2575,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1005-104839';
+const BUILD_V = '1005-145523';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
