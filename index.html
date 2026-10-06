@@ -186,10 +186,10 @@ body.rush .board { box-shadow: 0 0 0 6px var(--gold), 0 0 0 7px #fff3, 0 0 28px 
 .ocard.hum { container-type: inline-size; }
 .ocard.hum .rname { font-size: clamp(12px, 27cqw, 18px); line-height: 1; text-align: center; word-break: keep-all; }
 .ocard.hum .needs { flex-wrap: wrap; gap: 2px; }
-.ocard .needs { max-width: 100%; }
+.ocard .needs { max-width: 100%; width: 100%; }
 /* 부품 칸이 많으면(미국 주문 5칸) 칸을 줄여서 주문서 안에 맞춤 */
-.ocard .need { flex: 0 1 23px; width: auto; height: auto; aspect-ratio: 1; min-width: 17px; overflow: hidden; }
-.ocard.hum .need { flex: none; width: 21px; height: 21px; font-size: 14px; }
+.ocard .need { flex: 0 1 29px; width: auto; height: auto; aspect-ratio: 1; min-width: 20px; overflow: hidden; }
+.ocard.hum .need { flex: none; width: 25px; height: 25px; font-size: 16px; }
 .ocard.empty, .ocard.pending { background: rgba(0, 0, 0, .14); border: 2px dashed var(--hud-line); box-shadow: none; color: var(--hud-muted); justify-content: center; font-size: 12px; font-weight: 700; }
 .ocard.pending span { font-size: 30px; animation: urgent 1s ease-in-out infinite; }
 .ocard.done { border-color: var(--good); }
@@ -212,6 +212,11 @@ body.rush .board { box-shadow: 0 0 0 6px var(--gold), 0 0 0 7px #fff3, 0 0 28px 
 .need { flex: none; position: relative; width: 23px; height: 23px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 15px; border: 1.5px dashed var(--muted); background: var(--surface-2); box-sizing: border-box; }
 .need.got { border: 1.5px solid var(--good); background: rgba(46, 160, 67, .18); }
 .need.got::after { content: '✓'; position: absolute; right: -3px; bottom: -5px; font-size: 10px; font-weight: 700; color: var(--good); }
+/* 주문서 부품 칸도 보드 타일 색으로: 아직 못 받은 칸은 진하게, 받은 칸은 흐리게 + 초록 체크 */
+.need[style*="--tc"] { background: var(--tc); border: 1.5px solid rgba(0,0,0,.35); }
+.need[style*="--tc"] .art, .need[style*="--tc"] img, .need[style*="--tc"] svg { width: 88%; height: 88%; }
+.need.got[style*="--tc"] { opacity: .4; border-color: var(--good); }
+.need.got[style*="--tc"]::after { opacity: 1; right: -2px; bottom: -3px; width: 12px; height: 12px; border-radius: 50%; background: var(--good); color: #fff; font-size: 9px; line-height: 12px; text-align: center; }
 .pat { width: 100%; height: 12px; border-radius: 7px; background: rgba(0, 0, 0, .12); border: 2px solid var(--ink); overflow: hidden; flex: none; box-sizing: border-box; }
 /* 기다림 바: 세룰리안블루 → 노랑 → 다홍 → 버건디 */
 .pat i { display: block; height: 100%; background: var(--p-1); transform-origin: left; transition: background-color .3s; }
@@ -1599,7 +1604,7 @@ const stageIdle = () => !stage.busy && !stage.q.length;
 const splitName = n => n.length < 4 ? n : n === '트랜스포머' ? '트랜스<wbr>포머' : n.slice(0, 2) + '<wbr>' + n.slice(2);
 function orderBody(c, big) {
   const o = c.order, r = ROBOTS[o.want];
-  const needs = c.needs.map((nd, k) => `<span class="need${nd.got ? ' got' : ''}" data-need="${k}">${TILES[nd.p].icon}</span>`).join('');
+  const needs = c.needs.map((nd, k) => `<span class="need${nd.got ? ' got' : ''}" data-need="${k}" style="--tc:${TILES[nd.p].color}">${TILES[nd.p].icon}</span>`).join('');
   if (isHumSlot(S.slots.indexOf(c)) && !big) {
     // 휴머노이드 칸은 손님 자리 없이 로봇 그림만. 미국 수출용(해외수출 칸)만 그 자리에 트럼프가 섬
     const who = c.char === 'trump' ? `<div class="cface" data-face="${S.slots.indexOf(c)}" data-f="${faceOf(c)}">${faceHTML(faceOf(c), 'trump')}</div>` : `<div class="rb"><span class="ric">${r.icon}</span></div>`;
@@ -2582,7 +2587,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1006-174515';
+const BUILD_V = '1006-175920';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
