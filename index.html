@@ -417,6 +417,10 @@ body.rush .board { box-shadow: 0 0 0 6px var(--gold), 0 0 0 7px #fff3, 0 0 28px 
 .ss-parts { display: flex; align-items: center; gap: 2px; font-size: 24px; white-space: nowrap; }
 .ss-parts i { font-style: normal; font-size: 13px; color: var(--muted); }
 .ss-p b { font-size: 12px; font-weight: 700; }
+/* 만들 로봇의 부품: 보드 타일처럼 색 칸 위에 그림 */
+.ss-p { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; border: 2px solid rgba(0,0,0,.25); font-size: 20px; line-height: 1; overflow: hidden; flex: none; }
+.ss-p .art, .ss-p img, .ss-p svg { width: 26px; height: 26px; }
+.ss-parts { gap: 3px; }
 .ss-tap { position: relative; margin-top: 8px; font-family: var(--font-display); font-size: 18px; color: #1A1400; background: var(--accent); border-radius: 999px; padding: 8px 22px; opacity: 0; transition: opacity .3s; }
 .startshow.ready .ss-tap { opacity: 1; animation: urgent 1s ease-in-out infinite; }
 .startshow { position: fixed; inset: 0; z-index: 46; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
@@ -1831,7 +1835,10 @@ function botsToMakeHtml() {
   const list = S.def.robots.filter(r => !isSpec(r)).concat(S.def.robots.filter(isSpec));
   return list.map((r, k) => {
     const R = ROBOTS[r];
-    const parts = R.parts.map(p => `<span class="ss-p">${TILES[p].icon}</span>`).join('<i>+</i>');
+    // 이 판에서 그 로봇 주문에 늘 붙는 조건 칸(운행안전인증 등)도 같이 보여 줌
+    const os = ORDERS.filter(o => o.want === r && fitsLevel(o, S.lv, S.def.pool));
+    const extra = ['cert', 'union', 'made', 'korea'].filter(t => os.length && os.every(o => orderParts(o, S.def.pool).includes(t)));
+    const parts = [...R.parts, ...extra].map(p => `<span class="ss-p" style="background:${TILES[p].color}">${TILES[p].icon}</span>`).join('<i>+</i>');
     return `<div class="ss-bot" style="animation-delay:${(1.1 + k * 0.12).toFixed(2)}s"><span class="ss-ic">${R.icon}</span><span class="ss-nm">${R.name}</span><span class="ss-parts">${parts}</span></div>`;
   }).join('');
 }
@@ -2575,7 +2582,7 @@ function banner(text, delay) {
 }
 
 // ───────── 진행 ─────────
-const BUILD_V = '1006-072228';
+const BUILD_V = '1006-174515';
 function loop(t) {
   const dt = Math.min(0.1, (t - (S.last || t)) / 1000);
   S.last = t;
